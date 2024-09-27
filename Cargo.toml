@@ -1,0 +1,10 @@
+[package]
+name = "dv-rs"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+num_enum = "0.7.3"
+
+[build-dependencies]
+cmake = "0.1"
