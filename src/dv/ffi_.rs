@@ -41,7 +41,7 @@ pub type LOGICAL_t = ffi::c_uchar;
 /* DV_XY_t */
 
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct XY_t {
     pub x: ffi::c_double,
     pub y: ffi::c_double,
@@ -50,7 +50,7 @@ pub struct XY_t {
 /* DV_XYZ_t */
 
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct XYZ_t {
     pub x: ffi::c_double,
     pub y: ffi::c_double,
@@ -80,7 +80,7 @@ pub type VEC3D_t = XYZ_t;
 /* DV_INTERVAL_t */
 
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct INTERVAL_t {
     pub t0: ffi::c_double,
     pub t1: ffi::c_double,
@@ -89,9 +89,21 @@ pub struct INTERVAL_t {
 /* DV_TRIANGLE_t */
 
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
 pub struct TRIANGLE_t {
     pub v0: ffi::c_int,
     pub v1: ffi::c_int,
     pub v2: ffi::c_int,
+}
+
+/********************************* DV_MEMORY **********************************/
+
+#[link(name = "differvoid")]
+extern "C" {
+    pub(crate) fn DV_MEMORY_alloc(
+        nbytes: ffi::c_longlong,
+        pointer: *mut *const ffi::c_void,
+    ) -> CODE_t;
+
+    pub(crate) fn DV_MEMORY_free(pointer: *const ffi::c_void) -> CODE_t;
 }

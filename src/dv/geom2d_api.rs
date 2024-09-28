@@ -1,19 +1,20 @@
-use crate::dv::enum_::*;
-use crate::dv::ffi_::*;
+use super::array_::*;
+use super::enum_::*;
+use super::ffi_::*;
 use std::ffi;
 
 #[link(name = "differvoid")]
 extern "C" {
-    pub(crate) fn DV_GEOM2DAPI_convex_hull(
+    fn DV_GEOM2DAPI_convex_hull(
         n_points: ffi::c_int,
         points: *const PNT2D_t,
         algo: ALGO_t,
         n_convex_points: *mut ffi::c_int,
-        convex_indices: *mut *const ffi::c_int,
-        convex_points: *mut *const PNT2D_t,
+        convex_indices: *mut *mut ffi::c_int,
+        convex_points: *mut *mut PNT2D_t,
     ) -> CODE_t;
 
-    pub(crate) fn DV_GEOM2DAPI_enclosing_disc(
+    fn DV_GEOM2DAPI_enclosing_disc(
         n_points: ffi::c_int,
         points: *const PNT2D_t,
         origin: *mut PNT2D_t,
@@ -21,8 +22,10 @@ extern "C" {
     ) -> CODE_t;
 }
 
-pub fn convex_hull(points: &[PNT2D_t], algo: ALGO_e) -> Result<(i32,), CODE_e> {
+pub fn convex_hull(points: &[PNT2D_t], algo: ALGO_e) -> Result<(i32, Int32Array, XYArray), CODE_e> {
     let mut n_convex_points: i32 = 0;
+    let mut convex_indices: *mut ffi::c_int = std::ptr::null_mut();
+    let mut convex_points: *mut PNT2D_t = std::ptr::null_mut();
 
     unsafe {
         DV_GEOM2DAPI_convex_hull(
@@ -30,15 +33,19 @@ pub fn convex_hull(points: &[PNT2D_t], algo: ALGO_e) -> Result<(i32,), CODE_e> {
             points.as_ptr(),
             algo.into(),
             &mut n_convex_points,
-            &mut std::ptr::null(),
-            &mut std::ptr::null(),
+            &mut convex_indices,
+            &mut convex_points,
         )
         .try_into()
         .map_or_else(
             |e| Err(CODE_e::err),
             |v| {
                 if v == CODE_e::ok {
-                    Ok((n_convex_points,))
+                    Ok((
+                        n_convex_points,
+                        Array::new(convex_indices, n_convex_points),
+                        Array::new(convex_points, n_convex_points),
+                    ))
                 } else {
                     Err(v)
                 }
@@ -67,8 +74,13 @@ mod tests {
         match convex_hull(&points, ALGO_e::quick_hull_c) {
             Ok(r) => {
                 assert_eq!(7, r.0);
+                assert_eq!(4, r.1[2]);
+                assert_eq!(points[4], r.2[2]);
+                assert_eq!(points[1], r.2[6]);
             }
-            Err(e) => {}
+            Err(e) => {
+                panic!("Err({:?})", e);
+            }
         };
     }
 }
