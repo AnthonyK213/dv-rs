@@ -3,6 +3,7 @@
 #![allow(unused)]
 
 mod array_;
+mod common_;
 mod enum_;
 mod ffi_;
 
@@ -10,5 +11,6 @@ pub mod bcurve;
 pub mod geom2d_api;
 
 pub use array_::*;
+pub use common_::*;
 pub use enum_::*;
 pub use ffi_::*;

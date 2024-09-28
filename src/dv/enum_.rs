@@ -51,4 +51,5 @@ pub enum CODE_e {
     no_common_vertex,
     bad_vertex,
     cant_get_point,
+    unset,
 }
