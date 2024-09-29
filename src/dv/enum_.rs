@@ -11,6 +11,74 @@ pub enum ALGO_e {
     divide_and_conquer_c,
 }
 
+/* DV_CLASS_e */
+
+#[repr(i32)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Hash, IntoPrimitive, TryFromPrimitive)]
+enum CLASS_e {
+    null = 0,
+    class,
+    object,
+    geometry2d,
+    point2d,
+    cartesian_point2d,
+    vector2d,
+    curve2d,
+    bounded_curve2d,
+    nurbs_curve2d,
+    trimmed_curve2d,
+    conic2d,
+    circle2d,
+    ellipse2d,
+    hyperbola2d,
+    parabola2d,
+    line2d,
+    offset_curve2d,
+    geometry,
+    point3d,
+    cartesian_point3d,
+    vector3d,
+    transform3d,
+    curve,
+    bounded_curve,
+    nurbs_curve,
+    trimmed_curve,
+    conic,
+    circle,
+    ellipse,
+    hyperbola,
+    parabola,
+    line,
+    offset_curve,
+    surface,
+    bounded_surface,
+    nurbs_surface,
+    rectangular_trimmed_surface,
+    elementary_surface,
+    conical_surface,
+    cylindrical_surface,
+    spherical_surface,
+    toroidal_surface,
+    plane,
+    offset_surface,
+    mesh,
+    triangulation,
+    point_rep,
+    point_on_curve,
+    point_on_surface,
+    curve_rep,
+    curve_on_surface,
+    topol,
+    body,
+    region,
+    shell,
+    face,
+    loop_,
+    fin,
+    edge,
+    vertex,
+}
+
 /* DV_CODE_e */
 
 #[repr(i32)]
@@ -52,4 +120,18 @@ pub enum CODE_e {
     bad_vertex,
     cant_get_point,
     unset,
+}
+
+/* DV_BCURVE_form_e */
+
+#[repr(i32)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Hash, IntoPrimitive, TryFromPrimitive)]
+pub enum BCURVE_form_e {
+    unset_c = 8650,
+    arbitrary_c,
+    polyline_c,
+    circular_c,
+    elliptic_c,
+    parabolic_c,
+    hyperbolic_c,
 }

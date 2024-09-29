@@ -96,13 +96,33 @@ pub struct TRIANGLE_t {
     pub v2: ffi::c_int,
 }
 
+/******************************* STANDARD FORMS *******************************/
+
+/* DV_BCURVE_sf_t */
+
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub(crate) struct BCURVE_sf_t {
+    pub degree: ffi::c_int,
+    pub n_vertices: ffi::c_int,
+    pub vertex_dim: ffi::c_int,
+    pub is_rational: LOGICAL_t,
+    pub vertex: *mut ffi::c_double,
+    pub form: BCURVE_form_t,
+    pub n_knots: ffi::c_int,
+    pub knot_mult: *mut ffi::c_int,
+    pub knot: *mut ffi::c_double,
+    pub is_periodic: LOGICAL_t,
+    pub is_closed: ffi::c_uchar,
+}
+
 /********************************* DV_MEMORY **********************************/
 
 #[link(name = "differvoid")]
 extern "C" {
     pub(crate) fn DV_MEMORY_alloc(
         nbytes: ffi::c_longlong,
-        pointer: *mut *const ffi::c_void,
+        pointer: *mut *mut ffi::c_void,
     ) -> CODE_t;
 
     pub(crate) fn DV_MEMORY_free(pointer: *const ffi::c_void) -> CODE_t;
