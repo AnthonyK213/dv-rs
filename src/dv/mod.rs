@@ -9,6 +9,7 @@ mod ffi_;
 
 pub mod bcurve;
 pub mod bcurve_sf_t;
+pub mod class;
 pub mod geom2d_api;
 pub mod logical_t;
 pub mod object;

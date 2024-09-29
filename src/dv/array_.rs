@@ -3,7 +3,6 @@ use std::convert::From;
 use std::default::Default;
 use std::ffi;
 use std::ops::{Deref, Drop, Index, IndexMut};
-use std::process::Output;
 
 #[derive(Debug)]
 pub struct Array<T> {

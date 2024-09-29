@@ -15,9 +15,9 @@ pub enum ALGO_e {
 
 #[repr(i32)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Hash, IntoPrimitive, TryFromPrimitive)]
-enum CLASS_e {
+pub enum CLASS_e {
     null = 0,
-    class,
+    class_,
     object,
     geometry2d,
     point2d,

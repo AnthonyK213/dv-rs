@@ -119,13 +119,12 @@ impl BCURVE_sf_t {
         &mut self.__data
     }
 
-    pub(crate) fn update_cache(&mut self) -> &mut Self {
+    pub(crate) fn update_cache(&mut self) {
         self.__vertex = array_::Array::new(
             self.__data.vertex,
             self.__data.n_vertices * self.__data.vertex_dim,
         );
         self.__knot = array_::Array::new(self.__data.knot, self.__data.n_knots);
         self.__knot_mult = array_::Array::new(self.__data.knot_mult, self.__data.n_knots);
-        self
     }
 }

@@ -3,10 +3,24 @@ use std::ffi;
 
 #[link(name = "differvoid")]
 extern "C" {
+    fn DV_BCURVE_ask(bcurve: ffi_::BCURVE_t, bcurve_sf: *mut ffi_::BCURVE_sf_t) -> ffi_::CODE_t;
+
     fn DV_BCURVE_create(
         bcurve_sf: *const ffi_::BCURVE_sf_t,
         bcurve: *mut ffi_::BCURVE_t,
     ) -> ffi_::CODE_t;
+}
+
+pub fn ask(bcurve: ffi_::BCURVE_t) -> common_::DVResult<bcurve_sf_t::BCURVE_sf_t> {
+    let mut bcurve_sf = bcurve_sf_t::BCURVE_sf_t::new();
+
+    common_::wrap_result(
+        unsafe { DV_BCURVE_ask(bcurve, bcurve_sf.get_data_mut()) },
+        || {
+            bcurve_sf.update_cache();
+            bcurve_sf
+        },
+    )
 }
 
 pub fn create(bcurve_sf: &bcurve_sf_t::BCURVE_sf_t) -> common_::DVResult<ffi_::BCURVE_t> {
@@ -23,7 +37,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn create_test() {
+    fn create_ask_test() {
         let vertex: Vec<f64> = vec![
             -10. * 1.5,
             34. * 1.5,
@@ -61,6 +75,32 @@ mod tests {
             .set_knot(&knot, &knot_mult);
 
         let bcurve = create(&bcurve_sf).unwrap();
+
+        assert_eq!(
+            enum_::CLASS_e::nurbs_curve,
+            object::ask_class(bcurve).unwrap()
+        );
+
+        let bcurve_sf_asked = ask(bcurve).unwrap();
+
+        assert_eq!(bcurve_sf.get_degree(), bcurve_sf_asked.get_degree());
+        assert_eq!(bcurve_sf.get_vertex_dim(), bcurve_sf_asked.get_vertex_dim());
+        assert_eq!(
+            bcurve_sf.get_is_rational(),
+            bcurve_sf_asked.get_is_rational()
+        );
+
+        let mut vertex_asked = Vec::new();
+        vertex_asked.extend_from_slice(bcurve_sf_asked.get_vertex());
+        assert_eq!(vertex, vertex_asked);
+
+        let mut knot_asked = Vec::new();
+        knot_asked.extend_from_slice(bcurve_sf_asked.get_knot());
+        assert_eq!(knot, knot_asked);
+
+        let mut knot_mult_asked = Vec::new();
+        knot_mult_asked.extend_from_slice(bcurve_sf_asked.get_knot_mult());
+        assert_eq!(knot_mult, knot_mult_asked);
 
         object::delete(bcurve);
     }

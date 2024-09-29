@@ -1,4 +1,4 @@
-use super::{common_, ffi_};
+use super::{common_, enum_, ffi_};
 use std::ffi;
 
 #[link(name = "differvoid")]
@@ -10,9 +10,11 @@ extern "C" {
 
 pub const NULL: i32 = 0;
 
-pub fn ask_class(object: ffi_::OBJECT_t) -> common_::DVResult<ffi_::CLASS_t> {
-    let mut class: ffi_::CLASS_t = 0;
-    common_::wrap_result(unsafe { DV_OBJECT_ask_class(object, &mut class) }, || class)
+pub fn ask_class(object: ffi_::OBJECT_t) -> common_::DVResult<enum_::CLASS_e> {
+    let mut class: ffi_::CLASS_t = enum_::CLASS_e::null.into();
+    common_::wrap_result(unsafe { DV_OBJECT_ask_class(object, &mut class) }, || {
+        class.try_into().unwrap()
+    })
 }
 
 pub fn delete(object: ffi_::OBJECT_t) -> common_::DVResult<()> {
