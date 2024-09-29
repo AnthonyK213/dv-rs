@@ -7,7 +7,7 @@ pub const FALSE: ffi_::LOGICAL_t = 0;
 #[inline]
 pub(crate) fn to_bool(logical: ffi_::LOGICAL_t) -> bool {
     match logical {
-        0 => false,
+        FALSE => false,
         _ => true,
     }
 }
