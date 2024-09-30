@@ -1,4 +1,4 @@
-use super::ffi_;
+use super::{ffi_, xy_t, xyz_t, triangle_t};
 use std::convert::From;
 use std::default::Default;
 use std::ffi;
@@ -116,6 +116,6 @@ impl<T> Array<T> {
 
 pub type DoubleArray = Array<f64>;
 pub type Int32Array = Array<i32>;
-pub type TriangleArray = Array<ffi_::TRIANGLE_t>;
-pub type XYArray = Array<ffi_::XY_t>;
-pub type XYZArray = Array<ffi_::XYZ_t>;
+pub type TriangleArray = Array<triangle_t::TRIANGLE_t>;
+pub type XYArray = Array<xy_t::XY_t>;
+pub type XYZArray = Array<xyz_t::XYZ_t>;

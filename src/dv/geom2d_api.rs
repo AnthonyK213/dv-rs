@@ -1,32 +1,32 @@
-use super::{array_, common_, enum_, ffi_};
+use super::{array_, common_, enum_, ffi_, xy_t};
 use std::ffi;
 
 #[link(name = "differvoid")]
 extern "C" {
     fn DV_GEOM2DAPI_convex_hull(
         n_points: ffi::c_int,
-        points: *const ffi_::PNT2D_t,
+        points: *const xy_t::PNT2D_t,
         algo: ffi_::DV_ALGO_t,
         n_convex_points: *mut ffi::c_int,
         convex_indices: *mut *mut ffi::c_int,
-        convex_points: *mut *mut ffi_::PNT2D_t,
+        convex_points: *mut *mut xy_t::PNT2D_t,
     ) -> ffi_::DV_CODE_t;
 
     fn DV_GEOM2DAPI_enclosing_disc(
         n_points: ffi::c_int,
-        points: *const ffi_::PNT2D_t,
-        origin: *mut ffi_::PNT2D_t,
+        points: *const xy_t::PNT2D_t,
+        origin: *mut xy_t::PNT2D_t,
         radius: *mut ffi::c_double,
     ) -> ffi_::DV_CODE_t;
 }
 
 pub fn convex_hull(
-    points: &[ffi_::PNT2D_t],
+    points: &[xy_t::PNT2D_t],
     algo: enum_::ALGO_e,
 ) -> common_::DVResult<(i32, array_::Int32Array, array_::XYArray)> {
     let mut n_convex_points: i32 = 0;
     let mut convex_indices: *mut ffi::c_int = std::ptr::null_mut();
-    let mut convex_points: *mut ffi_::PNT2D_t = std::ptr::null_mut();
+    let mut convex_points: *mut xy_t::PNT2D_t = std::ptr::null_mut();
 
     common_::wrap_result(
         unsafe {
@@ -49,8 +49,8 @@ pub fn convex_hull(
     )
 }
 
-pub fn enclosing_disc(points: &[ffi_::PNT2D_t]) -> common_::DVResult<(ffi_::PNT2D_t, f64)> {
-    let mut origin = ffi_::PNT2D_t { x: 0., y: 0. };
+pub fn enclosing_disc(points: &[xy_t::PNT2D_t]) -> common_::DVResult<(xy_t::PNT2D_t, f64)> {
+    let mut origin = xy_t::PNT2D_t { x: 0., y: 0. };
     let mut radius: f64 = 0.;
 
     common_::wrap_result(

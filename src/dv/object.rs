@@ -3,7 +3,8 @@ use std::ffi;
 
 #[link(name = "differvoid")]
 extern "C" {
-    fn DV_OBJECT_ask_class(object: ffi_::OBJECT_t, class: *mut ffi_::DV_CLASS_t) -> ffi_::DV_CODE_t;
+    fn DV_OBJECT_ask_class(object: ffi_::OBJECT_t, class: *mut ffi_::DV_CLASS_t)
+        -> ffi_::DV_CODE_t;
 
     fn DV_OBJECT_delete(object: ffi_::OBJECT_t) -> ffi_::DV_CODE_t;
 }

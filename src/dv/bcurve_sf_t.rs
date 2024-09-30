@@ -19,7 +19,25 @@ pub(crate) struct DV_BCURVE_sf_t {
     pub is_closed: ffi::c_uchar,
 }
 
-#[derive(Debug)]
+impl Default for DV_BCURVE_sf_t {
+    fn default() -> Self {
+        Self {
+            degree: 0,
+            n_vertices: 0,
+            vertex_dim: 0,
+            is_rational: logical_t::FALSE,
+            vertex: std::ptr::null_mut(),
+            form: bcurve::form_e::unset_c.into(),
+            n_knots: 0,
+            knot_mult: std::ptr::null_mut(),
+            knot: std::ptr::null_mut(),
+            is_periodic: logical_t::FALSE,
+            is_closed: logical_t::FALSE,
+        }
+    }
+}
+
+#[derive(Debug, Default)]
 pub struct BCURVE_sf_t {
     __data: DV_BCURVE_sf_t,
     __vertex: array_::DoubleArray,
@@ -30,22 +48,7 @@ pub struct BCURVE_sf_t {
 impl BCURVE_sf_t {
     pub fn new() -> Self {
         Self {
-            __data: DV_BCURVE_sf_t {
-                degree: 0,
-                n_vertices: 0,
-                vertex_dim: 0,
-                is_rational: logical_t::FALSE,
-                vertex: std::ptr::null_mut(),
-                form: bcurve::form_e::unset_c.into(),
-                n_knots: 0,
-                knot_mult: std::ptr::null_mut(),
-                knot: std::ptr::null_mut(),
-                is_periodic: logical_t::FALSE,
-                is_closed: logical_t::FALSE,
-            },
-            __vertex: array_::Array::default(),
-            __knot: array_::Array::default(),
-            __knot_mult: array_::Array::default(),
+            ..Default::default()
         }
     }
 
