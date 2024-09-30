@@ -1,9 +1,27 @@
-use super::{array_, common_, enum_, ffi_, logical_t};
+use super::{array_, bcurve, common_, enum_, ffi_, logical_t};
 use std::ffi;
+
+/* DV_BCURVE_sf_t */
+
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub(crate) struct DV_BCURVE_sf_t {
+    pub degree: ffi::c_int,
+    pub n_vertices: ffi::c_int,
+    pub vertex_dim: ffi::c_int,
+    pub is_rational: logical_t::LOGICAL_t,
+    pub vertex: *mut ffi::c_double,
+    pub form: ffi_::DV_BCURVE_form_t,
+    pub n_knots: ffi::c_int,
+    pub knot_mult: *mut ffi::c_int,
+    pub knot: *mut ffi::c_double,
+    pub is_periodic: logical_t::LOGICAL_t,
+    pub is_closed: ffi::c_uchar,
+}
 
 #[derive(Debug)]
 pub struct BCURVE_sf_t {
-    __data: ffi_::BCURVE_sf_t,
+    __data: DV_BCURVE_sf_t,
     __vertex: array_::DoubleArray,
     __knot: array_::DoubleArray,
     __knot_mult: array_::Int32Array,
@@ -12,13 +30,13 @@ pub struct BCURVE_sf_t {
 impl BCURVE_sf_t {
     pub fn new() -> Self {
         Self {
-            __data: ffi_::BCURVE_sf_t {
+            __data: DV_BCURVE_sf_t {
                 degree: 0,
                 n_vertices: 0,
                 vertex_dim: 0,
                 is_rational: logical_t::FALSE,
                 vertex: std::ptr::null_mut(),
-                form: enum_::BCURVE_form_e::unset_c.into(),
+                form: bcurve::form_e::unset_c.into(),
                 n_knots: 0,
                 knot_mult: std::ptr::null_mut(),
                 knot: std::ptr::null_mut(),
@@ -47,7 +65,7 @@ impl BCURVE_sf_t {
         &self.__vertex
     }
 
-    pub fn get_form(&self) -> enum_::BCURVE_form_e {
+    pub fn get_form(&self) -> bcurve::form_e {
         self.__data.form.try_into().unwrap()
     }
 
@@ -85,7 +103,7 @@ impl BCURVE_sf_t {
         self
     }
 
-    pub fn set_form(&mut self, value: enum_::BCURVE_form_e) -> &mut Self {
+    pub fn set_form(&mut self, value: bcurve::form_e) -> &mut Self {
         self.__data.form = value.into();
         self
     }
@@ -111,11 +129,11 @@ impl BCURVE_sf_t {
 }
 
 impl BCURVE_sf_t {
-    pub(crate) fn get_data(&self) -> &ffi_::BCURVE_sf_t {
+    pub(crate) fn get_data(&self) -> &DV_BCURVE_sf_t {
         &self.__data
     }
 
-    pub(crate) fn get_data_mut(&mut self) -> &mut ffi_::BCURVE_sf_t {
+    pub(crate) fn get_data_mut(&mut self) -> &mut DV_BCURVE_sf_t {
         &mut self.__data
     }
 

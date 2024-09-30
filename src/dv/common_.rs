@@ -3,7 +3,7 @@ use super::{enum_, ffi_};
 pub type DVResult<U> = Result<U, enum_::CODE_e>;
 
 #[inline]
-pub(crate) fn wrap_result<U, F>(code: ffi_::CODE_t, f: F) -> DVResult<U>
+pub(crate) fn wrap_result<U, F>(code: ffi_::DV_CODE_t, f: F) -> DVResult<U>
 where
     F: FnOnce() -> U,
 {

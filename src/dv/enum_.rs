@@ -122,16 +122,34 @@ pub enum CODE_e {
     unset,
 }
 
-/* DV_BCURVE_form_e */
+/* DV_boolean_function_e */
 
 #[repr(i32)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Hash, IntoPrimitive, TryFromPrimitive)]
-pub enum BCURVE_form_e {
-    unset_c = 8650,
-    arbitrary_c,
-    polyline_c,
-    circular_c,
-    elliptic_c,
-    parabolic_c,
-    hyperbolic_c,
+pub enum boolean_function_e {
+    intersect_c = 15901,
+    subtract_c,
+    unite_c,
+}
+
+/* DV_check_geom_e */
+
+#[repr(i32)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Hash, IntoPrimitive, TryFromPrimitive)]
+pub enum check_geom_e {
+    no_c = 18280,
+    basic_c,
+    lazy_c,
+    full_c,
+    yes_c,
+}
+
+/* DV_check_vx_on_cu_e */
+
+#[repr(i32)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Hash, IntoPrimitive, TryFromPrimitive)]
+pub enum check_vx_on_cu_e {
+    all_c = 24760,
+    none_c,
+    unbounded_c,
 }

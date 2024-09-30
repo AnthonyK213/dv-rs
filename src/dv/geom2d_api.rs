@@ -6,18 +6,18 @@ extern "C" {
     fn DV_GEOM2DAPI_convex_hull(
         n_points: ffi::c_int,
         points: *const ffi_::PNT2D_t,
-        algo: ffi_::ALGO_t,
+        algo: ffi_::DV_ALGO_t,
         n_convex_points: *mut ffi::c_int,
         convex_indices: *mut *mut ffi::c_int,
         convex_points: *mut *mut ffi_::PNT2D_t,
-    ) -> ffi_::CODE_t;
+    ) -> ffi_::DV_CODE_t;
 
     fn DV_GEOM2DAPI_enclosing_disc(
         n_points: ffi::c_int,
         points: *const ffi_::PNT2D_t,
         origin: *mut ffi_::PNT2D_t,
         radius: *mut ffi::c_double,
-    ) -> ffi_::CODE_t;
+    ) -> ffi_::DV_CODE_t;
 }
 
 pub fn convex_hull(
@@ -68,22 +68,22 @@ pub fn enclosing_disc(points: &[ffi_::PNT2D_t]) -> common_::DVResult<(ffi_::PNT2
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::dv;
 
     #[test]
     fn convex_hull_test() {
-        let points: Vec<ffi_::PNT2D_t> = vec![
-            ffi_::PNT2D_t { x: 0., y: 2. },
-            ffi_::PNT2D_t { x: 1., y: 3. },
-            ffi_::PNT2D_t { x: 2., y: 2. },
-            ffi_::PNT2D_t { x: 2., y: 0. },
-            ffi_::PNT2D_t { x: 3., y: 1. },
-            ffi_::PNT2D_t { x: 3., y: 4. },
-            ffi_::PNT2D_t { x: 4., y: 2. },
-            ffi_::PNT2D_t { x: 4., y: 3. },
+        let points: Vec<dv::PNT2D_t> = vec![
+            dv::PNT2D_t { x: 0., y: 2. },
+            dv::PNT2D_t { x: 1., y: 3. },
+            dv::PNT2D_t { x: 2., y: 2. },
+            dv::PNT2D_t { x: 2., y: 0. },
+            dv::PNT2D_t { x: 3., y: 1. },
+            dv::PNT2D_t { x: 3., y: 4. },
+            dv::PNT2D_t { x: 4., y: 2. },
+            dv::PNT2D_t { x: 4., y: 3. },
         ];
 
-        match convex_hull(&points, enum_::ALGO_e::quick_hull_c) {
+        match dv::geom2d_api::convex_hull(&points, dv::ALGO_e::quick_hull_c) {
             Ok(r) => {
                 assert_eq!(7, r.0);
                 assert_eq!(4, r.1[2]);
@@ -98,18 +98,18 @@ mod tests {
 
     #[test]
     fn enclosing_disc_test() {
-        let points: Vec<ffi_::PNT2D_t> = vec![
-            ffi_::PNT2D_t { x: 0., y: 2. },
-            ffi_::PNT2D_t { x: 1., y: 3. },
-            ffi_::PNT2D_t { x: 2., y: 2. },
-            ffi_::PNT2D_t { x: 2., y: 0. },
-            ffi_::PNT2D_t { x: 3., y: 1. },
-            ffi_::PNT2D_t { x: 3., y: 4. },
-            ffi_::PNT2D_t { x: 4., y: 2. },
-            ffi_::PNT2D_t { x: 4., y: 3. },
+        let points: Vec<dv::PNT2D_t> = vec![
+            dv::PNT2D_t { x: 0., y: 2. },
+            dv::PNT2D_t { x: 1., y: 3. },
+            dv::PNT2D_t { x: 2., y: 2. },
+            dv::PNT2D_t { x: 2., y: 0. },
+            dv::PNT2D_t { x: 3., y: 1. },
+            dv::PNT2D_t { x: 3., y: 4. },
+            dv::PNT2D_t { x: 4., y: 2. },
+            dv::PNT2D_t { x: 4., y: 3. },
         ];
 
-        match enclosing_disc(&points) {
+        match dv::geom2d_api::enclosing_disc(&points) {
             Ok(r) => {}
             Err(e) => {
                 panic!("Err({:?})", e);

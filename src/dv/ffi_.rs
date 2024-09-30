@@ -23,29 +23,16 @@ pub type SURF_t = ffi::c_int;
 pub type TRANSF_t = ffi::c_int;
 pub type VERTEX_t = ffi::c_int;
 
-pub type ALGO_t = ffi::c_int;
-pub type BCURVE_form_t = ffi::c_int;
-pub type BSURF_form_t = ffi::c_int;
-pub type CLASS_t = ffi::c_int;
-pub type CODE_t = ffi::c_int;
-pub type GEOM_copy_t = ffi::c_int;
-pub type LOOP_type_t = ffi::c_int;
-pub type boolean_function_t = ffi::c_int;
-pub type check_geom_t = ffi::c_int;
-pub type check_vx_on_cu_t = ffi::c_int;
-
-/* DV_LOGICAL_t */
-
-pub type LOGICAL_t = ffi::c_uchar;
-
-/* DV_XY_t */
-
-#[repr(C)]
-#[derive(Debug, Copy, Clone, PartialEq)]
-pub struct XY_t {
-    pub x: ffi::c_double,
-    pub y: ffi::c_double,
-}
+pub(crate) type DV_ALGO_t = ffi::c_int;
+pub(crate) type DV_BCURVE_form_t = ffi::c_int;
+pub(crate) type DV_BSURF_form_t = ffi::c_int;
+pub(crate) type DV_CLASS_t = ffi::c_int;
+pub(crate) type DV_CODE_t = ffi::c_int;
+pub(crate) type DV_GEOM_copy_t = ffi::c_int;
+pub(crate) type DV_LOOP_type_t = ffi::c_int;
+pub(crate) type DV_boolean_function_t = ffi::c_int;
+pub(crate) type DV_check_geom_t = ffi::c_int;
+pub(crate) type DV_check_vx_on_cu_t = ffi::c_int;
 
 /* DV_XYZ_t */
 
@@ -98,23 +85,79 @@ pub struct TRIANGLE_t {
 
 /******************************* STANDARD FORMS *******************************/
 
-/* DV_BCURVE_sf_t */
+/* DV_AXIS1_sf_t */
+
+#[repr(C)]
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct AXIS1_sf_t {
+    location: PNT3D_t,
+    axis: VEC3D_t,
+}
+
+/* DV_AXIS2_sf_t */
+
+#[repr(C)]
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct AXIS2_sf_t {
+    location: PNT3D_t,
+    axis: VEC3D_t,
+    ref_direction: VEC3D_t,
+}
+
+/* DV_CIRCLE_sf_t */
+
+#[repr(C)]
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct CIRCLE_sf_t {
+    basis_set: AXIS2_sf_t,
+    radius: ffi::c_double,
+}
+
+/* DV_LINE_sf_t */
+
+#[repr(C)]
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct LINE_sf_t {
+    basis_set: AXIS1_sf_t,
+}
+
+/* DV_POINT_sf_t */
+
+#[repr(C)]
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct POINT_sf_t {
+    position: PNT3D_t,
+}
+
+/* DV_PLANE_sf_t */
+
+#[repr(C)]
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct PLANE_sf_t {
+    basis_set: AXIS2_sf_t,
+}
+
+/* DV_POLY_sf_t */
 
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
-pub(crate) struct BCURVE_sf_t {
-    pub degree: ffi::c_int,
-    pub n_vertices: ffi::c_int,
-    pub vertex_dim: ffi::c_int,
-    pub is_rational: LOGICAL_t,
-    pub vertex: *mut ffi::c_double,
-    pub form: BCURVE_form_t,
-    pub n_knots: ffi::c_int,
-    pub knot_mult: *mut ffi::c_int,
-    pub knot: *mut ffi::c_double,
-    pub is_periodic: LOGICAL_t,
-    pub is_closed: ffi::c_uchar,
+pub(crate) struct POLY_sf_t {
+    i_offset: ffi::c_int,
+    n_vertices: ffi::c_int,
+    n_triangles: ffi::c_int,
+    vertex: *mut PNT3D_t,
+    triangle: *mut TRIANGLE_t,
 }
+
+/* DV_TRANSF_sf_t */
+
+#[repr(C)]
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct TRANSF_sf_t {
+    matrix: [[ffi::c_double; 4]; 4],
+}
+
+/***************************** OPTION STRUCTURES ******************************/
 
 /********************************* DV_MEMORY **********************************/
 
@@ -123,7 +166,7 @@ extern "C" {
     pub(crate) fn DV_MEMORY_alloc(
         nbytes: ffi::c_longlong,
         pointer: *mut *mut ffi::c_void,
-    ) -> CODE_t;
+    ) -> DV_CODE_t;
 
-    pub(crate) fn DV_MEMORY_free(pointer: *const ffi::c_void) -> CODE_t;
+    pub(crate) fn DV_MEMORY_free(pointer: *const ffi::c_void) -> DV_CODE_t;
 }

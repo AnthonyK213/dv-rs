@@ -39,19 +39,11 @@ impl<T> Drop for Array<T> {
 
 impl<T: Copy> From<&[T]> for Array<T> {
     fn from(value: &[T]) -> Self {
-        let mut data: *mut ffi::c_void = std::ptr::null_mut();
-        let __size: i32 = value.len() as i32;
-
+        let mut array = Self::alloc(value.len() as i32);
         unsafe {
-            ffi_::DV_MEMORY_alloc(__size as i64 * std::mem::size_of::<T>() as i64, &mut data);
+            array.__data.copy_from(value.as_ptr(), array.len() as usize);
         }
-
-        let mut __data = data as *mut T;
-        unsafe {
-            __data.copy_from(value.as_ptr(), __size as usize);
-        }
-
-        Self { __data, __size }
+        array
     }
 }
 
@@ -75,6 +67,19 @@ impl<T> Array<T> {
     pub fn new(data: *mut T, size: i32) -> Self {
         Self {
             __data: data,
+            __size: size,
+        }
+    }
+
+    pub fn alloc(size: i32) -> Self {
+        let mut data: *mut ffi::c_void = std::ptr::null_mut();
+
+        unsafe {
+            ffi_::DV_MEMORY_alloc(size as i64 * std::mem::size_of::<T>() as i64, &mut data);
+        }
+
+        Self {
+            __data: data as *mut T,
             __size: size,
         }
     }

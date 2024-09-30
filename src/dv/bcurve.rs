@@ -1,14 +1,32 @@
 use super::{array_, bcurve_sf_t, common_, enum_, ffi_, object};
+use num_enum::{IntoPrimitive, TryFromPrimitive};
 use std::ffi;
 
 #[link(name = "differvoid")]
 extern "C" {
-    fn DV_BCURVE_ask(bcurve: ffi_::BCURVE_t, bcurve_sf: *mut ffi_::BCURVE_sf_t) -> ffi_::CODE_t;
+    fn DV_BCURVE_ask(
+        bcurve: ffi_::BCURVE_t,
+        bcurve_sf: *mut bcurve_sf_t::DV_BCURVE_sf_t,
+    ) -> ffi_::DV_CODE_t;
 
     fn DV_BCURVE_create(
-        bcurve_sf: *const ffi_::BCURVE_sf_t,
+        bcurve_sf: *const bcurve_sf_t::DV_BCURVE_sf_t,
         bcurve: *mut ffi_::BCURVE_t,
-    ) -> ffi_::CODE_t;
+    ) -> ffi_::DV_CODE_t;
+}
+
+/* DV_BCURVE_form_e */
+
+#[repr(i32)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Hash, IntoPrimitive, TryFromPrimitive)]
+pub enum form_e {
+    unset_c = 8650,
+    arbitrary_c,
+    polyline_c,
+    circular_c,
+    elliptic_c,
+    parabolic_c,
+    hyperbolic_c,
 }
 
 pub fn ask(bcurve: ffi_::BCURVE_t) -> common_::DVResult<bcurve_sf_t::BCURVE_sf_t> {
@@ -34,7 +52,7 @@ pub fn create(bcurve_sf: &bcurve_sf_t::BCURVE_sf_t) -> common_::DVResult<ffi_::B
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::dv;
 
     #[test]
     fn create_ask_test() {
@@ -67,21 +85,21 @@ mod tests {
         let knot: Vec<f64> = vec![0., 0.8, 2.7, 3.];
         let knot_mult: Vec<i32> = vec![4, 1, 1, 4];
 
-        let mut bcurve_sf = bcurve_sf_t::BCURVE_sf_t::new();
+        let mut bcurve_sf = dv::BCURVE_sf_t::new();
         bcurve_sf
             .set_degree(3)
             .set_is_rational(true)
             .set_vertex(&vertex, 4)
             .set_knot(&knot, &knot_mult);
 
-        let bcurve = create(&bcurve_sf).unwrap();
+        let bcurve = dv::bcurve::create(&bcurve_sf).unwrap();
 
         assert_eq!(
-            enum_::CLASS_e::nurbs_curve,
-            object::ask_class(bcurve).unwrap()
+            dv::CLASS_e::nurbs_curve,
+            dv::object::ask_class(bcurve).unwrap()
         );
 
-        let bcurve_sf_asked = ask(bcurve).unwrap();
+        let bcurve_sf_asked = dv::bcurve::ask(bcurve).unwrap();
 
         assert_eq!(bcurve_sf.get_degree(), bcurve_sf_asked.get_degree());
         assert_eq!(bcurve_sf.get_vertex_dim(), bcurve_sf_asked.get_vertex_dim());
@@ -102,6 +120,6 @@ mod tests {
         knot_mult_asked.extend_from_slice(bcurve_sf_asked.get_knot_mult());
         assert_eq!(knot_mult, knot_mult_asked);
 
-        object::delete(bcurve);
+        dv::object::delete(bcurve);
     }
 }
