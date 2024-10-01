@@ -106,7 +106,14 @@ mod tests {
             dv::body::create_solid_block(7., 8., 10., &dv::AXIS2_sf_t::default()).unwrap();
 
         let faces = dv::body::ask_faces(solid_block).unwrap();
-
         assert_eq!(6, faces.len());
+
+        let loop_ = dv::face::ask_first_loop(faces[0]).unwrap();
+        let fins = dv::loop_::ask_fins(loop_).unwrap();
+        assert_eq!(4, fins.len());
+
+        let edge = dv::fin::ask_edge(fins[0]).unwrap();
+        let vertices = dv::edge::ask_vertices(edge).unwrap();
+        assert_eq!(2, vertices.len());
     }
 }

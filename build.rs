@@ -22,20 +22,29 @@ fn main() {
     println!("DV_DIR: {}", dv_dir.display());
     println!("TARGET_DIR: {}", tt_dir.display());
 
+    let (src, dst);
+
     if cfg!(windows) {
-        let src = dv_dir.join("bin/differvoid.dll");
-        let dst = tt_dir.join("differvoid.dll");
-        println!("cargo:rerun-if-changed={}", src.display());
-        match fs::copy(&src, &dst) {
-            Err(_) => {
-                println!(
-                    "cargo:warning=Failed to copy {} to {}",
-                    src.display(),
-                    dst.display()
-                );
-            }
-            _ => {}
+        src = dv_dir.join("bin/differvoid.dll");
+        dst = tt_dir.join("differvoid.dll");
+    } else if cfg!(unix) {
+        src = dv_dir.join("lib/libdiffervoid.so");
+        dst = tt_dir.join("libdiffervoid.so");
+    } else {
+        panic!("OS not supported.");
+    }
+
+    println!("cargo:rerun-if-changed={}", src.display());
+
+    match fs::copy(&src, &dst) {
+        Err(_) => {
+            println!(
+                "cargo:warning=Failed to copy {} to {}",
+                src.display(),
+                dst.display()
+            );
         }
+        _ => {}
     }
 
     println!("cargo:rustc-link-search=native={}/lib", dv_dir.display());
