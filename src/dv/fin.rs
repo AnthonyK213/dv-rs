@@ -3,12 +3,12 @@ use std::ffi;
 
 #[link(name = "differvoid")]
 extern "C" {
-    fn DV_FIN_ask_edge(fin: ffi_::FIN_t, edge: *mut ffi_::EDGE_t) -> ffi_::DV_CODE_t;
+    fn DV_FIN_ask_edge(fin: ffi_::FIN_t, edge: *mut ffi_::EDGE_t) -> ffi_::DV_ERROR_code_t;
 
     fn DV_FIN_is_positive(
         fin: ffi_::FIN_t,
         is_positive: *mut logical_t::LOGICAL_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 }
 
 pub fn ask_edge(fin: ffi_::FIN_t) -> common_::DVResult<ffi_::EDGE_t> {

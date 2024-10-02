@@ -18,3 +18,6 @@ pub enum form_e {
     quadric_c,
     swept_c,
 }
+
+#[link(name = "differvoid")]
+extern "C" {}

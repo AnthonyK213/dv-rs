@@ -18,7 +18,7 @@ extern "C" {
         loop_: ffi_::LOOP_t,
         n_fins: *mut ffi::c_int,
         fins: *mut *mut ffi_::FIN_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 }
 
 pub fn ask_fins(loop_: ffi_::LOOP_t) -> common_::DVResult<array_::Int32Array> {

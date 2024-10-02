@@ -16,52 +16,52 @@ extern "C" {
         body: ffi_::BODY_t,
         n_edges: *mut ffi::c_int,
         edges: *mut *mut ffi_::EDGE_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_BODY_ask_faces(
         body: ffi_::BODY_t,
         n_faces: *mut ffi::c_int,
         faces: *mut *mut ffi_::FACE_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_BODY_ask_fin(
         body: ffi_::BODY_t,
         n_fins: *mut ffi::c_int,
         fins: *mut *mut ffi_::FIN_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_BODY_ask_loops(
         body: ffi_::BODY_t,
         n_loops: *mut ffi::c_int,
         loops: *mut *mut ffi_::LOOP_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 
-    fn DV_BODY_ask_parent(body: ffi_::BODY_t, parent: *mut ffi_::BODY_t) -> ffi_::DV_CODE_t;
+    fn DV_BODY_ask_parent(body: ffi_::BODY_t, parent: *mut ffi_::BODY_t) -> ffi_::DV_ERROR_code_t;
 
     fn DV_BODY_ask_regions(
         body: ffi_::BODY_t,
         n_regions: *mut ffi::c_int,
         regions: *mut *mut ffi_::REGION_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_BODY_ask_shells(
         body: ffi_::BODY_t,
         n_shells: *mut ffi::c_int,
         shells: *mut *mut ffi_::SHELL_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_BODY_ask_vertices(
         body: ffi_::BODY_t,
         n_vertices: *mut ffi::c_int,
         vertices: *mut *mut ffi_::VERTEX_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_BODY_boolean(
         target: ffi_::BODY_t,
         n_tools: ffi::c_int,
         tools: *const ffi_::BODY_t,
         options: *const DV_BODY_boolean_o_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_BODY_create_solid_block(
         x: ffi::c_double,
@@ -69,7 +69,7 @@ extern "C" {
         z: ffi::c_double,
         basis_set: *const axis2_sf_t::AXIS2_sf_t,
         body: *mut ffi_::BODY_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 }
 
 pub fn ask_faces(body: ffi_::BODY_t) -> common_::DVResult<array_::Int32Array> {

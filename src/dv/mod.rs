@@ -34,6 +34,7 @@ pub mod bsurf;
 pub mod class;
 pub mod curve;
 pub mod edge;
+pub mod error;
 pub mod geom;
 pub mod geom2d_api;
 pub mod line;

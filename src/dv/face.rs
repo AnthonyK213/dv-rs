@@ -3,8 +3,10 @@ use std::ffi;
 
 #[link(name = "differvoid")]
 extern "C" {
-    fn DV_FACE_ask_first_loop(face: ffi_::FACE_t, first_loop: *mut ffi_::LOOP_t)
-        -> ffi_::DV_CODE_t;
+    fn DV_FACE_ask_first_loop(
+        face: ffi_::FACE_t,
+        first_loop: *mut ffi_::LOOP_t,
+    ) -> ffi_::DV_ERROR_code_t;
 }
 
 pub fn ask_first_loop(face: ffi_::FACE_t) -> common_::DVResult<ffi_::LOOP_t> {

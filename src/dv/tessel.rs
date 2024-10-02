@@ -8,7 +8,7 @@ extern "C" {
         radius: ffi::c_double,
         level: ffi::c_int,
         tetrasphere: *mut ffi_::POLY_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 }
 
 pub fn create_tetrasphere(

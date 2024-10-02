@@ -6,13 +6,13 @@ extern "C" {
     fn DV_CLASS_ask_superclass(
         class: ffi_::DV_CLASS_t,
         superclass: *mut ffi_::DV_CLASS_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_CLASS_is_subclass(
         may_be_subclass: ffi_::DV_CLASS_t,
         class: ffi_::DV_CLASS_t,
         is_subclass: *mut logical_t::LOGICAL_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 }
 
 pub fn ask_superclass(class: enum_::CLASS_e) -> common_::DVResult<enum_::CLASS_e> {

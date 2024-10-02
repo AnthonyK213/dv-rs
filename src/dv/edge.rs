@@ -18,11 +18,17 @@ struct DV_EDGE_attach_curves_o_t {
 }
 
 extern "C" {
-    fn DV_EDGE_ask_curve(edge: ffi_::EDGE_t, curve: *mut ffi_::CURVE_t) -> ffi_::DV_CODE_t;
+    fn DV_EDGE_ask_curve(edge: ffi_::EDGE_t, curve: *mut ffi_::CURVE_t) -> ffi_::DV_ERROR_code_t;
 
-    fn DV_EDGE_ask_precision(edge: ffi_::EDGE_t, precision: *mut ffi::c_double) -> ffi_::DV_CODE_t;
+    fn DV_EDGE_ask_precision(
+        edge: ffi_::EDGE_t,
+        precision: *mut ffi::c_double,
+    ) -> ffi_::DV_ERROR_code_t;
 
-    fn DV_EDGE_ask_vertices(edge: ffi_::EDGE_t, vertices: *mut ffi_::VERTEX_t) -> ffi_::DV_CODE_t;
+    fn DV_EDGE_ask_vertices(
+        edge: ffi_::EDGE_t,
+        vertices: *mut ffi_::VERTEX_t,
+    ) -> ffi_::DV_ERROR_code_t;
 }
 
 pub fn ask_curve(edge: ffi_::EDGE_t) -> common_::DVResult<ffi_::CURVE_t> {
@@ -30,8 +36,8 @@ pub fn ask_curve(edge: ffi_::EDGE_t) -> common_::DVResult<ffi_::CURVE_t> {
     common_::wrap_result(unsafe { DV_EDGE_ask_curve(edge, &mut curve) }, || curve)
 }
 
-pub fn ask_precision(edge: ffi_::EDGE_t) -> common_::DVResult<ffi::c_double> {
-    let mut precision = 0.0_f64;
+pub fn ask_precision(edge: ffi_::EDGE_t) -> common_::DVResult<f64> {
+    let mut precision = 0_f64;
 
     common_::wrap_result(
         unsafe { DV_EDGE_ask_precision(edge, &mut precision) },

@@ -15,6 +15,7 @@ pub(crate) struct DV_BCURVE_sf_t {
     pub n_knots: ffi::c_int,
     pub knot_mult: *mut ffi::c_int,
     pub knot: *mut ffi::c_double,
+    pub knot_type: ffi_::DV_knot_type_t,
     pub is_periodic: logical_t::LOGICAL_t,
     pub is_closed: ffi::c_uchar,
 }
@@ -31,6 +32,7 @@ impl Default for DV_BCURVE_sf_t {
             n_knots: 0,
             knot_mult: std::ptr::null_mut(),
             knot: std::ptr::null_mut(),
+            knot_type: enum_::knot_type_e::unset_c.into(),
             is_periodic: logical_t::FALSE,
             is_closed: logical_t::FALSE,
         }
@@ -78,6 +80,10 @@ impl BCURVE_sf_t {
 
     pub fn get_knot(&self) -> &array_::DoubleArray {
         &self.__knot
+    }
+
+    pub fn get_knot_type(&self) -> enum_::knot_type_e {
+        self.__data.knot_type.try_into().unwrap()
     }
 
     pub fn get_is_periodic(&self) -> bool {

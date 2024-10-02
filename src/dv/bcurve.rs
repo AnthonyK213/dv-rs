@@ -7,12 +7,12 @@ extern "C" {
     fn DV_BCURVE_ask(
         bcurve: ffi_::BCURVE_t,
         bcurve_sf: *mut bcurve_sf_t::DV_BCURVE_sf_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_BCURVE_create(
         bcurve_sf: *const bcurve_sf_t::DV_BCURVE_sf_t,
         bcurve: *mut ffi_::BCURVE_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 }
 
 /* DV_BCURVE_form_e */

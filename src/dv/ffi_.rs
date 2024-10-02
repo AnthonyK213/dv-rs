@@ -27,12 +27,13 @@ pub(crate) type DV_ALGO_t = ffi::c_int;
 pub(crate) type DV_BCURVE_form_t = ffi::c_int;
 pub(crate) type DV_BSURF_form_t = ffi::c_int;
 pub(crate) type DV_CLASS_t = ffi::c_int;
-pub(crate) type DV_CODE_t = ffi::c_int;
+pub(crate) type DV_ERROR_code_t = ffi::c_int;
 pub(crate) type DV_GEOM_copy_t = ffi::c_int;
 pub(crate) type DV_LOOP_type_t = ffi::c_int;
 pub(crate) type DV_boolean_function_t = ffi::c_int;
 pub(crate) type DV_check_geom_t = ffi::c_int;
 pub(crate) type DV_check_vx_on_cu_t = ffi::c_int;
+pub(crate) type DV_knot_type_t = ffi::c_int;
 
 /********************************* DV_MEMORY **********************************/
 
@@ -41,7 +42,7 @@ extern "C" {
     pub(crate) fn DV_MEMORY_alloc(
         nbytes: ffi::c_longlong,
         pointer: *mut *mut ffi::c_void,
-    ) -> DV_CODE_t;
+    ) -> DV_ERROR_code_t;
 
-    pub(crate) fn DV_MEMORY_free(pointer: *const ffi::c_void) -> DV_CODE_t;
+    pub(crate) fn DV_MEMORY_free(pointer: *const ffi::c_void) -> DV_ERROR_code_t;
 }

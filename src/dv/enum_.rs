@@ -1,16 +1,5 @@
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
-/* DV_ALGO_e */
-
-#[repr(i32)]
-#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Hash, IntoPrimitive, TryFromPrimitive)]
-pub enum ALGO_e {
-    quick_hull_c = 0,
-    incremental_c,
-    graham_scan_c,
-    divide_and_conquer_c,
-}
-
 /* DV_CLASS_e */
 
 #[repr(i32)]
@@ -79,47 +68,15 @@ pub enum CLASS_e {
     vertex,
 }
 
-/* DV_CODE_e */
+/* DV_ALGO_e */
 
 #[repr(i32)]
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Hash, IntoPrimitive, TryFromPrimitive)]
-pub enum CODE_e {
-    ok = 0,
-    err,
-    not_implemented,
-    initialized,
-    null_arg_address,
-    invalid_value,
-    invalid_object,
-    invalid_tag,
-    still_referenced,
-    no_intersection,
-    points_are_collinear,
-    points_are_coplanar,
-    index_out_of_range,
-    value_out_of_range,
-    insufficient_points,
-    insufficient_knots,
-    bad_interval,
-    zero_interval,
-    periodic_open,
-    periodic_not_smooth,
-    cant_make_nurbs,
-    weight_le_0,
-    bad_dimension,
-    bad_knots,
-    poles_weights_not_match,
-    knots_mults_not_match,
-    invalid_mults,
-    geom_not_needed,
-    fin_not_in_loop,
-    fins_not_distinct,
-    edge_not_manifold,
-    vertex_not_manifold,
-    no_common_vertex,
-    bad_vertex,
-    cant_get_point,
-    unset,
+pub enum ALGO_e {
+    quick_hull_c = 0,
+    incremental_c,
+    graham_scan_c,
+    divide_and_conquer_c,
 }
 
 /* DV_boolean_function_e */
@@ -152,4 +109,18 @@ pub enum check_vx_on_cu_e {
     all_c = 24760,
     none_c,
     unbounded_c,
+}
+
+/* DV_knot_type_e */
+
+#[repr(i32)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Hash, IntoPrimitive, TryFromPrimitive)]
+pub enum knot_type_e {
+    unset_c = 8500,
+    non_uniform_c,
+    uniform_c,
+    quasi_uniform_c,
+    piecewise_bezier_c,
+    bezier_ends_c,
+    smooth_seam_c,
 }

@@ -20,6 +20,8 @@ pub(crate) struct DV_BSURF_sf_t {
     v_knot_mult: *mut ffi::c_int,
     u_knot: *mut ffi::c_double,
     v_knot: *mut ffi::c_double,
+    u_knot_type: ffi_::DV_knot_type_t,
+    v_knot_type: ffi_::DV_knot_type_t,
     is_u_periodic: logical_t::LOGICAL_t,
     is_v_periodic: logical_t::LOGICAL_t,
     is_u_closed: logical_t::LOGICAL_t,

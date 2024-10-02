@@ -3,12 +3,15 @@ use std::ffi;
 
 #[link(name = "differvoid")]
 extern "C" {
-    fn DV_VERTEX_ask_point(vertex: ffi_::VERTEX_t, point: *mut ffi_::POINT_t) -> ffi_::DV_CODE_t;
+    fn DV_VERTEX_ask_point(
+        vertex: ffi_::VERTEX_t,
+        point: *mut ffi_::POINT_t,
+    ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_VERTEX_ask_precision(
         vertex: ffi_::VERTEX_t,
         precision: *mut ffi::c_double,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 }
 
 pub fn ask_point(vertex: ffi_::VERTEX_t) -> common_::DVResult<ffi_::POINT_t> {

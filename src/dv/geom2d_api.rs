@@ -10,14 +10,14 @@ extern "C" {
         n_convex_points: *mut ffi::c_int,
         convex_indices: *mut *mut ffi::c_int,
         convex_points: *mut *mut xy_t::PNT2D_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_GEOM2DAPI_enclosing_disc(
         n_points: ffi::c_int,
         points: *const xy_t::PNT2D_t,
         origin: *mut xy_t::PNT2D_t,
         radius: *mut ffi::c_double,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 }
 
 pub fn convex_hull(

@@ -20,14 +20,14 @@ extern "C" {
     fn DV_CURVE_ask_interval(
         curve: ffi_::CURVE_t,
         interval: *mut interval_t::INTERVAL_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_CURVE_eval(
         curve: ffi_::CURVE_t,
         t: ffi::c_double,
         n_derivs: ffi::c_int,
         p: *mut xyz_t::VEC3D_t,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_CURVE_eval_curvature(
         curve: ffi_::CURVE_t,
@@ -36,7 +36,7 @@ extern "C" {
         principal_normal: *mut xyz_t::VEC3D_t,
         binormal: *mut xyz_t::VEC3D_t,
         curvature: *mut ffi::c_double,
-    ) -> ffi_::DV_CODE_t;
+    ) -> ffi_::DV_ERROR_code_t;
 }
 
 pub fn ask_interval(curve: ffi_::CURVE_t) -> common_::DVResult<interval_t::INTERVAL_t> {
@@ -61,21 +61,9 @@ pub fn eval_curvature(
     curve: ffi_::CURVE_t,
     t: ffi::c_double,
 ) -> common_::DVResult<(xyz_t::VEC3D_t, xyz_t::VEC3D_t, xyz_t::VEC3D_t, f64)> {
-    let mut tangent = xyz_t::VEC3D_t {
-        x: 0.,
-        y: 0.,
-        z: 0.,
-    };
-    let mut principal_normal = xyz_t::VEC3D_t {
-        x: 0.,
-        y: 0.,
-        z: 0.,
-    };
-    let mut binormal = xyz_t::VEC3D_t {
-        x: 0.,
-        y: 0.,
-        z: 0.,
-    };
+    let mut tangent = xyz_t::VEC3D_t::default();
+    let mut principal_normal = xyz_t::VEC3D_t::default();
+    let mut binormal = xyz_t::VEC3D_t::default();
     let mut curvature = 0_f64;
 
     common_::wrap_result(
