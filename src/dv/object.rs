@@ -15,6 +15,7 @@ pub const NULL: i32 = 0;
 
 pub fn ask_class(object: ffi_::OBJECT_t) -> common_::DVResult<enum_::CLASS_e> {
     let mut class: ffi_::DV_CLASS_t = enum_::CLASS_e::null.into();
+
     common_::wrap_result(unsafe { DV_OBJECT_ask_class(object, &mut class) }, || {
         class.try_into().unwrap()
     })

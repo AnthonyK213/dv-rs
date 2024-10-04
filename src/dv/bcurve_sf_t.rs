@@ -130,11 +130,6 @@ impl BCURVE_sf_t {
         self.__data.is_periodic = logical_t::from_bool(value);
         self
     }
-
-    pub fn set_is_closed(&mut self, value: bool) -> &mut Self {
-        self.__data.is_closed = logical_t::from_bool(value);
-        self
-    }
 }
 
 impl BCURVE_sf_t {

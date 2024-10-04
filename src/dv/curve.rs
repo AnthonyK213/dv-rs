@@ -102,7 +102,8 @@ mod tests {
             .set_degree(2)
             .set_is_rational(true)
             .set_vertex(&vertex, 3)
-            .set_knot(&knot, &knot_mult);
+            .set_knot(&knot, &knot_mult)
+            .set_is_periodic(false);
 
         let bcurve = dv::bcurve::create(&bcurve_sf).unwrap();
 
