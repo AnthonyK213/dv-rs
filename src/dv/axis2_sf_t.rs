@@ -6,9 +6,9 @@ use std::ffi;
 #[repr(C)]
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct AXIS2_sf_t {
-    location: xyz_t::PNT3D_t,
-    axis: xyz_t::VEC3D_t,
-    ref_direction: xyz_t::VEC3D_t,
+    pub location: xyz_t::PNT3D_t,
+    pub axis: xyz_t::VEC3D_t,
+    pub ref_direction: xyz_t::VEC3D_t,
 }
 
 impl Default for AXIS2_sf_t {

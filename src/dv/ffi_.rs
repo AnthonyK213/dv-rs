@@ -2,26 +2,26 @@ use ::std::ffi;
 
 /********************************** TYPEDEFS **********************************/
 
-pub type BCURVE_t = ffi::c_int;
-pub type BODY_t = ffi::c_int;
-pub type BSURF_t = ffi::c_int;
-pub type CURVE_t = ffi::c_int;
-pub type EDGE_t = ffi::c_int;
-pub type FACE_t = ffi::c_int;
-pub type FIN_t = ffi::c_int;
-pub type GEOM_t = ffi::c_int;
-pub type LINE_t = ffi::c_int;
-pub type LOOP_t = ffi::c_int;
-pub type MESH_t = ffi::c_int;
-pub type OBJECT_t = ffi::c_int;
-pub type PLANE_t = ffi::c_int;
-pub type POINT_t = ffi::c_int;
-pub type POLY_t = ffi::c_int;
-pub type REGION_t = ffi::c_int;
-pub type SHELL_t = ffi::c_int;
-pub type SURF_t = ffi::c_int;
-pub type TRANSF_t = ffi::c_int;
-pub type VERTEX_t = ffi::c_int;
+pub(crate) type DV_BCURVE_t = ffi::c_int;
+pub(crate) type DV_BODY_t = ffi::c_int;
+pub(crate) type DV_BSURF_t = ffi::c_int;
+pub(crate) type DV_CURVE_t = ffi::c_int;
+pub(crate) type DV_EDGE_t = ffi::c_int;
+pub(crate) type DV_FACE_t = ffi::c_int;
+pub(crate) type DV_FIN_t = ffi::c_int;
+pub(crate) type DV_GEOM_t = ffi::c_int;
+pub(crate) type DV_LINE_t = ffi::c_int;
+pub(crate) type DV_LOOP_t = ffi::c_int;
+pub(crate) type DV_MESH_t = ffi::c_int;
+pub(crate) type DV_OBJECT_t = ffi::c_int;
+pub(crate) type DV_PLANE_t = ffi::c_int;
+pub(crate) type DV_POINT_t = ffi::c_int;
+pub(crate) type DV_POLY_t = ffi::c_int;
+pub(crate) type DV_REGION_t = ffi::c_int;
+pub(crate) type DV_SHELL_t = ffi::c_int;
+pub(crate) type DV_SURF_t = ffi::c_int;
+pub(crate) type DV_TRANSF_t = ffi::c_int;
+pub(crate) type DV_VERTEX_t = ffi::c_int;
 
 pub(crate) type DV_ALGO_t = ffi::c_int;
 pub(crate) type DV_BCURVE_form_t = ffi::c_int;

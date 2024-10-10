@@ -1,4 +1,6 @@
-use super::{array_, common_, ffi_, interval_t, logical_t, object};
+use super::object::{self, OBJECT_t};
+use super::topol::{self, TOPOL_t};
+use super::{array_, common_, ffi_, interval_t, logical_t, vertex};
 use std::ffi;
 
 /* DV_EDGE_attach_curves_o_t */
@@ -18,38 +20,63 @@ struct DV_EDGE_attach_curves_o_t {
 }
 
 extern "C" {
-    fn DV_EDGE_ask_curve(edge: ffi_::EDGE_t, curve: *mut ffi_::CURVE_t) -> ffi_::DV_ERROR_code_t;
+    fn DV_EDGE_ask_curve(
+        edge: ffi_::DV_EDGE_t,
+        curve: *mut ffi_::DV_CURVE_t,
+    ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_EDGE_ask_precision(
-        edge: ffi_::EDGE_t,
+        edge: ffi_::DV_EDGE_t,
         precision: *mut ffi::c_double,
     ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_EDGE_ask_vertices(
-        edge: ffi_::EDGE_t,
-        vertices: *mut ffi_::VERTEX_t,
+        edge: ffi_::DV_EDGE_t,
+        vertices: *mut ffi_::DV_VERTEX_t,
     ) -> ffi_::DV_ERROR_code_t;
 }
 
-pub fn ask_curve(edge: ffi_::EDGE_t) -> common_::DVResult<ffi_::CURVE_t> {
-    let mut curve = object::NULL;
-    common_::wrap_result(unsafe { DV_EDGE_ask_curve(edge, &mut curve) }, || curve)
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct EDGE_t(ffi_::DV_EDGE_t);
+
+impl From<i32> for EDGE_t {
+    fn from(value: i32) -> Self {
+        Self(value)
+    }
 }
 
-pub fn ask_precision(edge: ffi_::EDGE_t) -> common_::DVResult<f64> {
-    let mut precision = 0_f64;
-
-    common_::wrap_result(
-        unsafe { DV_EDGE_ask_precision(edge, &mut precision) },
-        || precision,
-    )
+impl OBJECT_t for EDGE_t {
+    fn tag(&self) -> i32 {
+        self.0
+    }
 }
 
-pub fn ask_vertices(edge: ffi_::EDGE_t) -> common_::DVResult<array_::Int32Array> {
-    let mut vertices = array_::Int32Array::alloc(2);
+impl TOPOL_t for EDGE_t {}
 
-    common_::wrap_result(
-        unsafe { DV_EDGE_ask_vertices(edge, vertices.as_mut_ptr()) },
-        || vertices,
-    )
+impl EDGE_t {
+    pub fn ask_curve(&self) -> common_::DVResult<i32> {
+        let mut curve = object::NULL;
+
+        common_::wrap_result(unsafe { DV_EDGE_ask_curve(self.tag(), &mut curve) }, || {
+            curve
+        })
+    }
+
+    pub fn ask_precision(&self) -> common_::DVResult<f64> {
+        let mut precision = 0_f64;
+
+        common_::wrap_result(
+            unsafe { DV_EDGE_ask_precision(self.tag(), &mut precision) },
+            || precision,
+        )
+    }
+
+    pub fn ask_vertices(&self) -> common_::DVResult<[vertex::VERTEX_t; 2]> {
+        let mut vertices = array_::Int32Array::alloc(2);
+
+        common_::wrap_result(
+            unsafe { DV_EDGE_ask_vertices(self.0, vertices.as_mut_ptr()) },
+            || [vertices[0].into(), vertices[1].into()],
+        )
+    }
 }

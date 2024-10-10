@@ -1,4 +1,4 @@
-use super::{array_, common_, ffi_};
+use super::{array_, common_, ffi_, object, topol};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use std::ffi;
 
@@ -15,18 +15,37 @@ pub enum type_e {
 #[link(name = "differvoid")]
 extern "C" {
     fn DV_LOOP_ask_fins(
-        loop_: ffi_::LOOP_t,
+        loop_: ffi_::DV_LOOP_t,
         n_fins: *mut ffi::c_int,
-        fins: *mut *mut ffi_::FIN_t,
+        fins: *mut *mut ffi_::DV_FIN_t,
     ) -> ffi_::DV_ERROR_code_t;
 }
 
-pub fn ask_fins(loop_: ffi_::LOOP_t) -> common_::DVResult<array_::Int32Array> {
-    let mut n_fins = 0_i32;
-    let mut fins: *mut ffi_::FIN_t = std::ptr::null_mut();
+#[derive(Debug, Copy, Clone, PartialEq, Eq)]
+pub struct LOOP_t(ffi_::DV_LOOP_t);
 
-    common_::wrap_result(
-        unsafe { DV_LOOP_ask_fins(loop_, &mut n_fins, &mut fins) },
-        || array_::Array::new(fins, n_fins),
-    )
+impl From<i32> for LOOP_t {
+    fn from(value: i32) -> Self {
+        Self(value)
+    }
+}
+
+impl object::OBJECT_t for LOOP_t {
+    fn tag(&self) -> i32 {
+        self.0
+    }
+}
+
+impl topol::TOPOL_t for LOOP_t {}
+
+impl LOOP_t {
+    pub fn ask_fins(&self) -> common_::DVResult<array_::Int32Array> {
+        let mut n_fins = 0_i32;
+        let mut fins: *mut ffi_::DV_FIN_t = std::ptr::null_mut();
+
+        common_::wrap_result(
+            unsafe { DV_LOOP_ask_fins(self.0, &mut n_fins, &mut fins) },
+            || array_::Array::new(fins, n_fins),
+        )
+    }
 }

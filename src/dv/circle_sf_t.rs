@@ -6,6 +6,6 @@ use std::ffi;
 #[repr(C)]
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct CIRCLE_sf_t {
-    basis_set: axis2_sf_t::AXIS2_sf_t,
-    radius: ffi::c_double,
+    pub basis_set: axis2_sf_t::AXIS2_sf_t,
+    pub radius: ffi::c_double,
 }

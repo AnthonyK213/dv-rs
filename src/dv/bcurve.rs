@@ -1,17 +1,20 @@
-use super::{array_, bcurve_sf_t, common_, enum_, ffi_, object};
+use super::curve::{self, CURVE_t};
+use super::geom::{self, GEOM_t};
+use super::object::{self, OBJECT_t};
+use super::{array_, bcurve_sf_t, common_, enum_, ffi_};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use std::ffi;
 
 #[link(name = "differvoid")]
 extern "C" {
     fn DV_BCURVE_ask(
-        bcurve: ffi_::BCURVE_t,
+        bcurve: ffi_::DV_BCURVE_t,
         bcurve_sf: *mut bcurve_sf_t::DV_BCURVE_sf_t,
     ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_BCURVE_create(
         bcurve_sf: *const bcurve_sf_t::DV_BCURVE_sf_t,
-        bcurve: *mut ffi_::BCURVE_t,
+        bcurve: *mut ffi_::DV_BCURVE_t,
     ) -> ffi_::DV_ERROR_code_t;
 }
 
@@ -29,30 +32,51 @@ pub enum form_e {
     hyperbolic_c,
 }
 
-pub fn ask(bcurve: ffi_::BCURVE_t) -> common_::DVResult<bcurve_sf_t::BCURVE_sf_t> {
-    let mut bcurve_sf = bcurve_sf_t::BCURVE_sf_t::new();
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BCURVE_t(ffi_::DV_BCURVE_t);
 
-    common_::wrap_result(
-        unsafe { DV_BCURVE_ask(bcurve, bcurve_sf.get_data_mut()) },
-        || {
-            bcurve_sf.update_cache();
-            bcurve_sf
-        },
-    )
+impl From<i32> for BCURVE_t {
+    fn from(value: i32) -> Self {
+        Self(value)
+    }
 }
 
-pub fn create(bcurve_sf: &bcurve_sf_t::BCURVE_sf_t) -> common_::DVResult<ffi_::BCURVE_t> {
-    let mut bcurve: ffi_::BCURVE_t = object::NULL;
+impl OBJECT_t for BCURVE_t {
+    fn tag(&self) -> i32 {
+        self.0
+    }
+}
 
-    common_::wrap_result(
-        unsafe { DV_BCURVE_create(bcurve_sf.get_data(), &mut bcurve) },
-        || bcurve,
-    )
+impl GEOM_t for BCURVE_t {}
+
+impl CURVE_t for BCURVE_t {}
+
+impl BCURVE_t {
+    pub fn ask(&self) -> common_::DVResult<bcurve_sf_t::BCURVE_sf_t> {
+        let mut bcurve_sf = bcurve_sf_t::BCURVE_sf_t::new();
+
+        common_::wrap_result(
+            unsafe { DV_BCURVE_ask(self.0, bcurve_sf.get_data_mut()) },
+            || {
+                bcurve_sf.update_cache();
+                bcurve_sf
+            },
+        )
+    }
+
+    pub fn create(bcurve_sf: &bcurve_sf_t::BCURVE_sf_t) -> common_::DVResult<BCURVE_t> {
+        let mut bcurve = object::NULL;
+
+        common_::wrap_result(
+            unsafe { DV_BCURVE_create(bcurve_sf.get_data(), &mut bcurve) },
+            || bcurve.into(),
+        )
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::dv;
+    use crate::dv::{self, OBJECT_t};
 
     #[test]
     fn create_ask_test() {
@@ -92,14 +116,11 @@ mod tests {
             .set_vertex(&vertex, 4)
             .set_knot(&knot, &knot_mult);
 
-        let bcurve = dv::bcurve::create(&bcurve_sf).unwrap();
+        let bcurve = dv::BCURVE_t::create(&bcurve_sf).unwrap();
 
-        assert_eq!(
-            dv::CLASS_e::nurbs_curve,
-            dv::object::ask_class(bcurve).unwrap()
-        );
+        assert_eq!(dv::CLASS_e::nurbs_curve, bcurve.ask_class().unwrap());
 
-        let bcurve_sf_asked = dv::bcurve::ask(bcurve).unwrap();
+        let bcurve_sf_asked = bcurve.ask().unwrap();
 
         assert_eq!(bcurve_sf.get_degree(), bcurve_sf_asked.get_degree());
         assert_eq!(bcurve_sf.get_vertex_dim(), bcurve_sf_asked.get_vertex_dim());
@@ -120,6 +141,6 @@ mod tests {
         knot_mult_asked.extend_from_slice(bcurve_sf_asked.get_knot_mult());
         assert_eq!(knot_mult, knot_mult_asked);
 
-        dv::object::delete(bcurve);
+        bcurve.delete().unwrap();
     }
 }

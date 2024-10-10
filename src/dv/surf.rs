@@ -1,9 +1,11 @@
+use super::geom::{self, GEOM_t};
+use super::object::{self, OBJECT_t};
 use super::{array_, common_, ffi_, xy_t, xyz_t};
 use std::ffi;
 
 extern "C" {
     fn DV_SURF_eval(
-        surface: ffi_::SURF_t,
+        surface: ffi_::DV_SURF_t,
         uv: xy_t::UV_t,
         n_u_derivs: ffi::c_int,
         n_v_derivs: ffi::c_int,
@@ -11,23 +13,25 @@ extern "C" {
     ) -> ffi_::DV_ERROR_code_t;
 }
 
-pub fn eval(
-    surface: ffi_::SURF_t,
-    uv: xy_t::UV_t,
-    n_u_derivs: i32,
-    n_v_derivs: i32,
-) -> common_::DVResult<array_::XYZArray> {
-    let mut p = array_::XYZArray::alloc((n_u_derivs + 1) * (n_v_derivs + 1));
+pub trait SURF_t: GEOM_t {
+    fn eval(
+        &self,
+        uv: xy_t::UV_t,
+        n_u_derivs: i32,
+        n_v_derivs: i32,
+    ) -> common_::DVResult<array_::XYZArray> {
+        let mut p = array_::XYZArray::alloc((n_u_derivs + 1) * (n_v_derivs + 1));
 
-    common_::wrap_result(
-        unsafe { DV_SURF_eval(surface, uv, n_u_derivs, n_v_derivs, p.as_mut_ptr()) },
-        || p,
-    )
+        common_::wrap_result(
+            unsafe { DV_SURF_eval(self.tag(), uv, n_u_derivs, n_v_derivs, p.as_mut_ptr()) },
+            || p,
+        )
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::dv;
+    use crate::dv::{self, SURF_t};
 
     #[test]
     fn eval_test() {
@@ -85,10 +89,10 @@ mod tests {
             .set_is_u_periodic(false)
             .set_is_v_periodic(false);
 
-        let bsurf = dv::bsurf::create(&bsurf_sf).unwrap();
+        let bsurf = dv::BSURF_t::create(&bsurf_sf).unwrap();
 
         let uv = dv::UV_t { x: 0.3, y: 0.6 };
 
-        let p = dv::surf::eval(bsurf, uv, 2, 2).unwrap();
+        let p = bsurf.eval(uv, 2, 2).unwrap();
     }
 }

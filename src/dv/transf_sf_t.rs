@@ -5,7 +5,7 @@ use std::ffi;
 #[repr(C)]
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct TRANSF_sf_t {
-    matrix: [[ffi::c_double; 4]; 4],
+    pub matrix: [[ffi::c_double; 4]; 4],
 }
 
 impl Default for TRANSF_sf_t {

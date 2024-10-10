@@ -1,4 +1,4 @@
-use super::{ffi_, xy_t, xyz_t, triangle_t};
+use super::{ffi_, triangle_t, xy_t, xyz_t};
 use std::convert::From;
 use std::default::Default;
 use std::ffi;

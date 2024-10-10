@@ -1,11 +1,12 @@
-use super::{common_, ffi_, logical_t, object};
+use super::object::{self, OBJECT_t};
+use super::{common_, ffi_, logical_t};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
 extern "C" {
-    fn DV_GEOM_copy(geom: ffi_::GEOM_t, copy: *mut ffi_::GEOM_t) -> ffi_::DV_ERROR_code_t;
+    fn DV_GEOM_copy(geom: ffi_::DV_GEOM_t, copy: *mut ffi_::DV_GEOM_t) -> ffi_::DV_ERROR_code_t;
 
     fn DV_GEOM_is_valid(
-        geom: ffi_::GEOM_t,
+        geom: ffi_::DV_GEOM_t,
         is_valid: *mut logical_t::LOGICAL_t,
     ) -> ffi_::DV_ERROR_code_t;
 }
@@ -20,15 +21,18 @@ pub enum copy_e {
     auto_c,
 }
 
-pub fn copy(geom: ffi_::GEOM_t) -> common_::DVResult<ffi_::GEOM_t> {
-    let mut copy = object::NULL;
-    common_::wrap_result(unsafe { DV_GEOM_copy(geom, &mut copy) }, || copy)
-}
+pub trait GEOM_t: OBJECT_t {
+    fn copy(&self) -> common_::DVResult<i32> {
+        let mut copy = object::NULL;
+        common_::wrap_result(unsafe { DV_GEOM_copy(self.tag(), &mut copy) }, || copy)
+    }
 
-pub fn is_valid(geom: ffi_::GEOM_t) -> common_::DVResult<bool> {
-    let mut is_valid = logical_t::FALSE;
+    fn is_valid(&self) -> common_::DVResult<bool> {
+        let mut is_valid = logical_t::FALSE;
 
-    common_::wrap_result(unsafe { DV_GEOM_is_valid(geom, &mut is_valid) }, || {
-        logical_t::to_bool(is_valid)
-    })
+        common_::wrap_result(
+            unsafe { DV_GEOM_is_valid(self.tag(), &mut is_valid) },
+            || logical_t::to_bool(is_valid),
+        )
+    }
 }

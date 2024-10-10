@@ -1,3 +1,4 @@
+use super::object::{self, OBJECT_t};
 use super::{array_, common_, enum_, ffi_, interval_t, logical_t, xyz_t};
 use std::ffi;
 
@@ -18,19 +19,19 @@ pub struct make_wire_body_o_s {
 #[link(name = "differvoid")]
 extern "C" {
     fn DV_CURVE_ask_interval(
-        curve: ffi_::CURVE_t,
+        curve: ffi_::DV_CURVE_t,
         interval: *mut interval_t::INTERVAL_t,
     ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_CURVE_eval(
-        curve: ffi_::CURVE_t,
+        curve: ffi_::DV_CURVE_t,
         t: ffi::c_double,
         n_derivs: ffi::c_int,
         p: *mut xyz_t::VEC3D_t,
     ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_CURVE_eval_curvature(
-        curve: ffi_::CURVE_t,
+        curve: ffi_::DV_CURVE_t,
         t: ffi::c_double,
         tangent: *mut xyz_t::VEC3D_t,
         principal_normal: *mut xyz_t::VEC3D_t,
@@ -39,51 +40,53 @@ extern "C" {
     ) -> ffi_::DV_ERROR_code_t;
 }
 
-pub fn ask_interval(curve: ffi_::CURVE_t) -> common_::DVResult<interval_t::INTERVAL_t> {
-    let mut interval = interval_t::INTERVAL_t { t0: 0., t1: 0. };
+pub trait CURVE_t: OBJECT_t {
+    fn ask_interval(&self) -> common_::DVResult<interval_t::INTERVAL_t> {
+        let mut interval = interval_t::INTERVAL_t { t0: 0., t1: 0. };
 
-    common_::wrap_result(
-        unsafe { DV_CURVE_ask_interval(curve, &mut interval) },
-        || interval,
-    )
-}
+        common_::wrap_result(
+            unsafe { DV_CURVE_ask_interval(self.tag(), &mut interval) },
+            || interval,
+        )
+    }
 
-pub fn eval(curve: ffi_::CURVE_t, t: f64, n_derivs: i32) -> common_::DVResult<array_::XYZArray> {
-    let mut p = array_::XYZArray::alloc(n_derivs + 1);
+    fn eval(&self, t: f64, n_derivs: i32) -> common_::DVResult<array_::XYZArray> {
+        let mut p = array_::XYZArray::alloc(n_derivs + 1);
 
-    common_::wrap_result(
-        unsafe { DV_CURVE_eval(curve, t, n_derivs, p.as_mut_ptr()) },
-        || p,
-    )
-}
+        common_::wrap_result(
+            unsafe { DV_CURVE_eval(self.tag(), t, n_derivs, p.as_mut_ptr()) },
+            || p,
+        )
+    }
 
-pub fn eval_curvature(
-    curve: ffi_::CURVE_t,
-    t: ffi::c_double,
-) -> common_::DVResult<(xyz_t::VEC3D_t, xyz_t::VEC3D_t, xyz_t::VEC3D_t, f64)> {
-    let mut tangent = xyz_t::VEC3D_t::default();
-    let mut principal_normal = xyz_t::VEC3D_t::default();
-    let mut binormal = xyz_t::VEC3D_t::default();
-    let mut curvature = 0_f64;
+    fn eval_curvature(
+        &self,
+        t: ffi::c_double,
+    ) -> common_::DVResult<(xyz_t::VEC3D_t, xyz_t::VEC3D_t, xyz_t::VEC3D_t, f64)> {
+        let mut tangent = xyz_t::VEC3D_t::default();
+        let mut principal_normal = xyz_t::VEC3D_t::default();
+        let mut binormal = xyz_t::VEC3D_t::default();
+        let mut curvature = 0_f64;
 
-    common_::wrap_result(
-        unsafe {
-            DV_CURVE_eval_curvature(
-                curve,
-                t,
-                &mut tangent,
-                &mut principal_normal,
-                &mut binormal,
-                &mut curvature,
-            )
-        },
-        || (tangent, principal_normal, binormal, curvature),
-    )
+        common_::wrap_result(
+            unsafe {
+                DV_CURVE_eval_curvature(
+                    self.tag(),
+                    t,
+                    &mut tangent,
+                    &mut principal_normal,
+                    &mut binormal,
+                    &mut curvature,
+                )
+            },
+            || (tangent, principal_normal, binormal, curvature),
+        )
+    }
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::dv;
+    use crate::dv::{self, CURVE_t};
 
     #[test]
     fn eval_test() {
@@ -105,17 +108,16 @@ mod tests {
             .set_knot(&knot, &knot_mult)
             .set_is_periodic(false);
 
-        let bcurve = dv::bcurve::create(&bcurve_sf).unwrap();
+        let bcurve = dv::BCURVE_t::create(&bcurve_sf).unwrap();
 
         let t = 0.25;
 
-        let p = dv::curve::eval(bcurve, t, 2).unwrap();
+        let p = bcurve.eval(t, 2).unwrap();
         println!("deriv_0 = {:?}", p[0]);
         println!("deriv_1 = {:?}", p[1]);
         println!("deriv_2 = {:?}", p[2]);
 
-        let (tangent, principal_normal, binormal, curvature) =
-            dv::curve::eval_curvature(bcurve, t).unwrap();
+        let (tangent, principal_normal, binormal, curvature) = bcurve.eval_curvature(t).unwrap();
         assert_eq!(
             dv::VEC3D_t {
                 x: -1.,

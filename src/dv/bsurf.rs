@@ -1,16 +1,19 @@
-use super::{bsurf_sf_t, common_, ffi_, object};
+use super::geom::{self, GEOM_t};
+use super::object::{self, OBJECT_t};
+use super::surf::{self, SURF_t};
+use super::{bsurf_sf_t, common_, ffi_};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
 #[link(name = "differvoid")]
 extern "C" {
     fn DV_BSURF_ask(
-        bsurf: ffi_::BSURF_t,
+        bsurf: ffi_::DV_BSURF_t,
         bsurf_sf: *mut bsurf_sf_t::DV_BSURF_sf_t,
     ) -> ffi_::DV_ERROR_code_t;
 
     fn DV_BSURF_create(
         bsurf_sf: *const bsurf_sf_t::DV_BSURF_sf_t,
-        bsurf: *mut ffi_::BSURF_t,
+        bsurf: *mut ffi_::DV_BSURF_t,
     ) -> ffi_::DV_ERROR_code_t;
 }
 
@@ -33,23 +36,44 @@ pub enum form_e {
     swept_c,
 }
 
-pub fn ask(bsurf: ffi_::BSURF_t) -> common_::DVResult<bsurf_sf_t::BSURF_sf_t> {
-    let mut bsurf_sf = bsurf_sf_t::BSURF_sf_t::new();
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct BSURF_t(ffi_::DV_BSURF_t);
 
-    common_::wrap_result(
-        unsafe { DV_BSURF_ask(bsurf, bsurf_sf.get_data_mut()) },
-        || {
-            bsurf_sf.update_cache();
-            bsurf_sf
-        },
-    )
+impl From<i32> for BSURF_t {
+    fn from(value: i32) -> Self {
+        Self(value)
+    }
 }
 
-pub fn create(bsurf_sf: &bsurf_sf_t::BSURF_sf_t) -> common_::DVResult<ffi_::BSURF_t> {
-    let mut bsurf = object::NULL;
+impl OBJECT_t for BSURF_t {
+    fn tag(&self) -> i32 {
+        self.0
+    }
+}
 
-    common_::wrap_result(
-        unsafe { DV_BSURF_create(bsurf_sf.get_data(), &mut bsurf) },
-        || bsurf,
-    )
+impl GEOM_t for BSURF_t {}
+
+impl SURF_t for BSURF_t {}
+
+impl BSURF_t {
+    pub fn ask(&self) -> common_::DVResult<bsurf_sf_t::BSURF_sf_t> {
+        let mut bsurf_sf = bsurf_sf_t::BSURF_sf_t::new();
+
+        common_::wrap_result(
+            unsafe { DV_BSURF_ask(self.tag(), bsurf_sf.get_data_mut()) },
+            || {
+                bsurf_sf.update_cache();
+                bsurf_sf
+            },
+        )
+    }
+
+    pub fn create(bsurf_sf: &bsurf_sf_t::BSURF_sf_t) -> common_::DVResult<BSURF_t> {
+        let mut bsurf = object::NULL;
+
+        common_::wrap_result(
+            unsafe { DV_BSURF_create(bsurf_sf.get_data(), &mut bsurf) },
+            || bsurf.into(),
+        )
+    }
 }

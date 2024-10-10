@@ -64,3 +64,19 @@ pub use transf_sf_t::*;
 pub use triangle_t::*;
 pub use xy_t::*;
 pub use xyz_t::*;
+
+pub use curve::*;
+pub use geom::*;
+pub use object::*;
+pub use surf::*;
+pub use topol::*;
+
+pub use bcurve::BCURVE_t;
+pub use body::BODY_t;
+pub use bsurf::BSURF_t;
+pub use edge::EDGE_t;
+pub use face::FACE_t;
+pub use fin::FIN_t;
+pub use line::LINE_t;
+pub use loop_::LOOP_t;
+pub use vertex::VERTEX_t;
