@@ -30,13 +30,13 @@ impl From<i32> for LOOP_t {
     }
 }
 
-impl object::OBJECT_t for LOOP_t {
+impl object::OBJECT for LOOP_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl topol::TOPOL_t for LOOP_t {}
+impl topol::TOPOL for LOOP_t {}
 
 impl LOOP_t {
     pub fn ask_fins(&self) -> common_::DVResult<array_::Int32Array> {

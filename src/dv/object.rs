@@ -13,7 +13,7 @@ extern "C" {
 
 pub const NULL: i32 = 0;
 
-pub trait OBJECT_t: From<i32> + Copy + Clone + Eq + PartialEq {
+pub trait OBJECT: From<i32> + Copy + Clone + Eq + PartialEq {
     fn tag(&self) -> i32;
 
     fn ask_class(&self) -> common_::DVResult<enum_::CLASS_e> {

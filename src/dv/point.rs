@@ -22,13 +22,13 @@ impl From<i32> for POINT_t {
     }
 }
 
-impl object::OBJECT_t for POINT_t {
+impl object::OBJECT for POINT_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl geom::GEOM_t for POINT_t {}
+impl geom::GEOM for POINT_t {}
 
 impl POINT_t {
     pub fn ask(&self) -> common_::DVResult<point_sf_t::POINT_sf_t> {

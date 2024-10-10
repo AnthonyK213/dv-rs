@@ -1,4 +1,4 @@
-use super::object::{self, OBJECT_t};
+use super::object::{self, OBJECT};
 use super::{common_, ffi_, logical_t, point, topol};
 use std::ffi;
 
@@ -24,13 +24,13 @@ impl From<i32> for VERTEX_t {
     }
 }
 
-impl object::OBJECT_t for VERTEX_t {
+impl object::OBJECT for VERTEX_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl topol::TOPOL_t for VERTEX_t {}
+impl topol::TOPOL for VERTEX_t {}
 
 impl VERTEX_t {
     pub fn ask_point(&self) -> common_::DVResult<point::POINT_t> {

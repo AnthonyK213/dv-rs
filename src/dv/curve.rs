@@ -1,4 +1,5 @@
-use super::object::{self, OBJECT_t};
+use super::geom::{self, GEOM};
+use super::object::{self, OBJECT};
 use super::{array_, common_, enum_, ffi_, interval_t, logical_t, xyz_t};
 use std::ffi;
 
@@ -40,7 +41,7 @@ extern "C" {
     ) -> ffi_::DV_ERROR_code_t;
 }
 
-pub trait CURVE_t: OBJECT_t {
+pub trait CURVE: OBJECT {
     fn ask_interval(&self) -> common_::DVResult<interval_t::INTERVAL_t> {
         let mut interval = interval_t::INTERVAL_t { t0: 0., t1: 0. };
 
@@ -84,9 +85,28 @@ pub trait CURVE_t: OBJECT_t {
     }
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct CURVE_t(ffi_::DV_CURVE_t);
+
+impl From<i32> for CURVE_t {
+    fn from(value: i32) -> Self {
+        Self(value)
+    }
+}
+
+impl OBJECT for CURVE_t {
+    fn tag(&self) -> i32 {
+        self.0
+    }
+}
+
+impl GEOM for CURVE_t {}
+
+impl CURVE for CURVE_t {}
+
 #[cfg(test)]
 mod tests {
-    use crate::dv::{self, CURVE_t};
+    use crate::dv::{self, CURVE};
 
     #[test]
     fn eval_test() {

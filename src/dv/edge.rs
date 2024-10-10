@@ -1,5 +1,5 @@
-use super::object::{self, OBJECT_t};
-use super::topol::{self, TOPOL_t};
+use super::object::{self, OBJECT};
+use super::topol::{self, TOPOL};
 use super::{array_, common_, ffi_, interval_t, logical_t, vertex};
 use std::ffi;
 
@@ -45,13 +45,13 @@ impl From<i32> for EDGE_t {
     }
 }
 
-impl OBJECT_t for EDGE_t {
+impl OBJECT for EDGE_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl TOPOL_t for EDGE_t {}
+impl TOPOL for EDGE_t {}
 
 impl EDGE_t {
     pub fn ask_curve(&self) -> common_::DVResult<i32> {

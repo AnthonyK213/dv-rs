@@ -1,4 +1,4 @@
-use super::object::{self, OBJECT_t};
+use super::object::{self, OBJECT};
 use super::{common_, ffi_, logical_t};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
@@ -21,7 +21,7 @@ pub enum copy_e {
     auto_c,
 }
 
-pub trait GEOM_t: OBJECT_t {
+pub trait GEOM: OBJECT {
     fn copy(&self) -> common_::DVResult<i32> {
         let mut copy = object::NULL;
         common_::wrap_result(unsafe { DV_GEOM_copy(self.tag(), &mut copy) }, || copy)

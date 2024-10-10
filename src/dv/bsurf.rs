@@ -1,6 +1,6 @@
-use super::geom::{self, GEOM_t};
-use super::object::{self, OBJECT_t};
-use super::surf::{self, SURF_t};
+use super::geom::{self, GEOM};
+use super::object::{self, OBJECT};
+use super::surf::{self, SURF};
 use super::{bsurf_sf_t, common_, ffi_};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
@@ -45,15 +45,15 @@ impl From<i32> for BSURF_t {
     }
 }
 
-impl OBJECT_t for BSURF_t {
+impl OBJECT for BSURF_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl GEOM_t for BSURF_t {}
+impl GEOM for BSURF_t {}
 
-impl SURF_t for BSURF_t {}
+impl SURF for BSURF_t {}
 
 impl BSURF_t {
     pub fn ask(&self) -> common_::DVResult<bsurf_sf_t::BSURF_sf_t> {

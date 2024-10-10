@@ -1,5 +1,5 @@
-use super::geom::{self, GEOM_t};
-use super::object::{self, OBJECT_t};
+use super::geom::{self, GEOM};
+use super::object::{self, OBJECT};
 use super::{array_, common_, ffi_, xy_t, xyz_t};
 use std::ffi;
 
@@ -13,7 +13,7 @@ extern "C" {
     ) -> ffi_::DV_ERROR_code_t;
 }
 
-pub trait SURF_t: GEOM_t {
+pub trait SURF: GEOM {
     fn eval(
         &self,
         uv: xy_t::UV_t,
@@ -31,7 +31,7 @@ pub trait SURF_t: GEOM_t {
 
 #[cfg(test)]
 mod tests {
-    use crate::dv::{self, SURF_t};
+    use crate::dv::{self, SURF};
 
     #[test]
     fn eval_test() {

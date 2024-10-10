@@ -39,15 +39,15 @@ impl From<i32> for LINE_t {
     }
 }
 
-impl object::OBJECT_t for LINE_t {
+impl object::OBJECT for LINE_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl geom::GEOM_t for LINE_t {}
+impl geom::GEOM for LINE_t {}
 
-impl curve::CURVE_t for LINE_t {}
+impl curve::CURVE for LINE_t {}
 
 #[cfg(test)]
 mod tests {

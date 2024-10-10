@@ -1,5 +1,5 @@
-use super::object::{self, OBJECT_t};
-use super::topol::{self, TOPOL_t};
+use super::object::{self, OBJECT};
+use super::topol::{self, TOPOL};
 use super::{array_, axis2_sf_t, common_, ffi_};
 use std::ffi;
 
@@ -86,13 +86,13 @@ impl From<i32> for BODY_t {
     }
 }
 
-impl OBJECT_t for BODY_t {
+impl OBJECT for BODY_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl TOPOL_t for BODY_t {}
+impl TOPOL for BODY_t {}
 
 impl BODY_t {
     pub fn ask_faces(&self) -> common_::DVResult<array_::Int32Array> {

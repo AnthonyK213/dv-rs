@@ -1,5 +1,5 @@
-use super::object::{self, OBJECT_t};
-use super::topol::{self, TOPOL_t};
+use super::object::{self, OBJECT};
+use super::topol::{self, TOPOL};
 use super::{common_, edge, ffi_, logical_t};
 use std::ffi;
 
@@ -22,13 +22,13 @@ impl From<i32> for FIN_t {
     }
 }
 
-impl OBJECT_t for FIN_t {
+impl OBJECT for FIN_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl TOPOL_t for FIN_t {}
+impl TOPOL for FIN_t {}
 
 impl FIN_t {
     pub fn ask_edge(&self) -> common_::DVResult<edge::EDGE_t> {

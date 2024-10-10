@@ -1,5 +1,5 @@
-use super::object::{self, OBJECT_t};
-use super::topol::{self, TOPOL_t};
+use super::object::{self, OBJECT};
+use super::topol::{self, TOPOL};
 use super::{common_, ffi_, loop_};
 use std::ffi;
 
@@ -20,13 +20,13 @@ impl From<i32> for FACE_t {
     }
 }
 
-impl object::OBJECT_t for FACE_t {
+impl object::OBJECT for FACE_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl topol::TOPOL_t for FACE_t {}
+impl topol::TOPOL for FACE_t {}
 
 impl FACE_t {
     pub fn ask_first_loop(&self) -> common_::DVResult<loop_::LOOP_t> {

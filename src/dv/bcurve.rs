@@ -1,6 +1,6 @@
-use super::curve::{self, CURVE_t};
-use super::geom::{self, GEOM_t};
-use super::object::{self, OBJECT_t};
+use super::curve::{self, CURVE};
+use super::geom::{self, GEOM};
+use super::object::{self, OBJECT};
 use super::{array_, bcurve_sf_t, common_, enum_, ffi_};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use std::ffi;
@@ -41,15 +41,15 @@ impl From<i32> for BCURVE_t {
     }
 }
 
-impl OBJECT_t for BCURVE_t {
+impl OBJECT for BCURVE_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl GEOM_t for BCURVE_t {}
+impl GEOM for BCURVE_t {}
 
-impl CURVE_t for BCURVE_t {}
+impl CURVE for BCURVE_t {}
 
 impl BCURVE_t {
     pub fn ask(&self) -> common_::DVResult<bcurve_sf_t::BCURVE_sf_t> {
@@ -76,7 +76,7 @@ impl BCURVE_t {
 
 #[cfg(test)]
 mod tests {
-    use crate::dv::{self, OBJECT_t};
+    use crate::dv::{self, OBJECT};
 
     #[test]
     fn create_ask_test() {
