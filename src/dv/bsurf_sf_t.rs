@@ -1,4 +1,4 @@
-use super::{array_, bsurf, common_, enum_, ffi_, logical_t};
+use super::{array_, bsurf, enum_, ffi_, logical_t};
 use std::ffi;
 
 /* DV_BSURF_sf_t */

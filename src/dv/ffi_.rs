@@ -20,6 +20,7 @@ pub(crate) type DV_POLY_t = ffi::c_int;
 pub(crate) type DV_REGION_t = ffi::c_int;
 pub(crate) type DV_SHELL_t = ffi::c_int;
 pub(crate) type DV_SURF_t = ffi::c_int;
+pub(crate) type DV_TOPOL_t = ffi::c_int;
 pub(crate) type DV_TRANSF_t = ffi::c_int;
 pub(crate) type DV_VERTEX_t = ffi::c_int;
 

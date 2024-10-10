@@ -1,5 +1,6 @@
 use super::object::{self, OBJECT};
-use super::{common_, ffi_, logical_t, point, topol};
+use super::topol::TOPOL;
+use super::{common_, ffi_, point};
 use std::ffi;
 
 #[link(name = "differvoid")]
@@ -24,13 +25,13 @@ impl From<i32> for VERTEX_t {
     }
 }
 
-impl object::OBJECT for VERTEX_t {
+impl OBJECT for VERTEX_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl topol::TOPOL for VERTEX_t {}
+impl TOPOL for VERTEX_t {}
 
 impl VERTEX_t {
     pub fn ask_point(&self) -> common_::DVResult<point::POINT_t> {
@@ -42,7 +43,7 @@ impl VERTEX_t {
         )
     }
 
-    fn ask_precision(&self) -> common_::DVResult<f64> {
+    pub fn ask_precision(&self) -> common_::DVResult<f64> {
         let mut precision = 0.0_f64;
 
         common_::wrap_result(

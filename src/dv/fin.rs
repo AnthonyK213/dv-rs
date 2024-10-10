@@ -1,7 +1,6 @@
 use super::object::{self, OBJECT};
-use super::topol::{self, TOPOL};
+use super::topol::TOPOL;
 use super::{common_, edge, ffi_, logical_t};
-use std::ffi;
 
 #[link(name = "differvoid")]
 extern "C" {

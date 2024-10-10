@@ -1,5 +1,4 @@
 use super::xyz_t;
-use std::ffi;
 
 /* DV_AXIS1_sf_t */
 

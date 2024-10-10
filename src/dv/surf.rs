@@ -1,5 +1,5 @@
-use super::geom::{self, GEOM};
-use super::object::{self, OBJECT};
+use super::geom::GEOM;
+use super::object::OBJECT;
 use super::{array_, common_, ffi_, xy_t, xyz_t};
 use std::ffi;
 
@@ -28,6 +28,25 @@ pub trait SURF: GEOM {
         )
     }
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct SURF_t(ffi_::DV_SURF_t);
+
+impl From<i32> for SURF_t {
+    fn from(value: i32) -> Self {
+        Self(value)
+    }
+}
+
+impl OBJECT for SURF_t {
+    fn tag(&self) -> i32 {
+        self.0
+    }
+}
+
+impl GEOM for SURF_t {}
+
+impl SURF for SURF_t {}
 
 #[cfg(test)]
 mod tests {

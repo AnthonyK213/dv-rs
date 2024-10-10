@@ -1,6 +1,6 @@
-use super::geom::{self, GEOM};
-use super::object::{self, OBJECT};
-use super::{array_, common_, enum_, ffi_, interval_t, logical_t, xyz_t};
+use super::geom::GEOM;
+use super::object::OBJECT;
+use super::{array_, common_, ffi_, interval_t, logical_t, xyz_t};
 use std::ffi;
 
 /* DV_CURVE_make_wire_body_o_t */

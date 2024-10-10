@@ -36,7 +36,7 @@ impl POINT_t {
         common_::wrap_result(unsafe { DV_POINT_ask(self.0, &mut point_sf) }, || point_sf)
     }
 
-    pub fn create(point_sf: &point_sf_t::POINT_sf_t) -> common_::DVResult<POINT_t> {
+    pub fn create(point_sf: &point_sf_t::POINT_sf_t) -> common_::DVResult<Self> {
         let mut point = object::NULL;
 
         common_::wrap_result(unsafe { DV_POINT_create(point_sf, &mut point) }, || {

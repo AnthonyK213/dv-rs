@@ -1,6 +1,4 @@
 use super::{common_, curve, ffi_, geom, line_sf_t, object};
-use std::ffi;
-use std::ops::Deref;
 
 #[link(name = "differvoid")]
 extern "C" {

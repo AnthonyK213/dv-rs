@@ -1,4 +1,3 @@
-use super::ffi_;
 use std::ffi;
 
 /* DV_LOGICAL_t */

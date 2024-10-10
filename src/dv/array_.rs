@@ -39,7 +39,7 @@ impl<T> Drop for Array<T> {
 
 impl<T: Copy> From<&[T]> for Array<T> {
     fn from(value: &[T]) -> Self {
-        let mut array = Self::alloc(value.len() as i32);
+        let array = Self::alloc(value.len() as i32);
         unsafe {
             array.__data.copy_from(value.as_ptr(), array.len() as usize);
         }
@@ -90,7 +90,7 @@ impl<T> Array<T> {
     }
 
     pub fn get(&self, index: i32) -> Option<&T> {
-        if (index < 0 || index >= self.__size) {
+        if index < 0 || index >= self.__size {
             None
         } else {
             Some(&self[index])
@@ -98,7 +98,7 @@ impl<T> Array<T> {
     }
 
     pub fn get_mut(&mut self, index: i32) -> Option<&mut T> {
-        if (index < 0 || index >= self.__size) {
+        if index < 0 || index >= self.__size {
             None
         } else {
             Some(&mut self[index])

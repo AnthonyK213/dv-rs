@@ -1,9 +1,8 @@
-use super::curve::{self, CURVE};
-use super::geom::{self, GEOM};
+use super::curve::CURVE;
+use super::geom::GEOM;
 use super::object::{self, OBJECT};
-use super::{array_, bcurve_sf_t, common_, enum_, ffi_};
+use super::{bcurve_sf_t, common_, ffi_};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
-use std::ffi;
 
 #[link(name = "differvoid")]
 extern "C" {
@@ -118,7 +117,7 @@ mod tests {
 
         let bcurve = dv::BCURVE_t::create(&bcurve_sf).unwrap();
 
-        assert_eq!(dv::CLASS_e::nurbs_curve, bcurve.ask_class().unwrap());
+        assert_eq!(dv::CLASS_e::nurbs_curve, *(bcurve.ask_class().unwrap()));
 
         let bcurve_sf_asked = bcurve.ask().unwrap();
 

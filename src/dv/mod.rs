@@ -1,6 +1,5 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
-#![allow(unused)]
 
 mod array_;
 mod common_;
@@ -48,7 +47,6 @@ pub mod tessel;
 pub use array_::*;
 pub use common_::*;
 pub use enum_::*;
-pub use ffi_::*;
 
 pub use axis1_sf_t::*;
 pub use axis2_sf_t::*;

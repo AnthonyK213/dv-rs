@@ -1,5 +1,4 @@
-use super::{common_, enum_, ffi_};
-use std::ffi;
+use super::{class, common_, enum_, ffi_};
 
 #[link(name = "differvoid")]
 extern "C" {
@@ -16,7 +15,7 @@ pub const NULL: i32 = 0;
 pub trait OBJECT: From<i32> + Copy + Clone + Eq + PartialEq {
     fn tag(&self) -> i32;
 
-    fn ask_class(&self) -> common_::DVResult<enum_::CLASS_e> {
+    fn ask_class(&self) -> common_::DVResult<class::CLASS_t> {
         let mut class: ffi_::DV_CLASS_t = enum_::CLASS_e::null.into();
 
         common_::wrap_result(
@@ -27,5 +26,24 @@ pub trait OBJECT: From<i32> + Copy + Clone + Eq + PartialEq {
 
     fn delete(&self) -> common_::DVResult<()> {
         common_::wrap_result(unsafe { DV_OBJECT_delete(self.tag()) }, || ())
+    }
+
+    fn cast<T: OBJECT>(obj: T) -> Self {
+        obj.tag().into()
+    }
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct OBJECT_t(ffi_::DV_OBJECT_t);
+
+impl From<i32> for OBJECT_t {
+    fn from(value: i32) -> Self {
+        Self(value)
+    }
+}
+
+impl OBJECT for OBJECT_t {
+    fn tag(&self) -> i32 {
+        self.0
     }
 }

@@ -1,6 +1,6 @@
-use super::geom::{self, GEOM};
+use super::geom::GEOM;
 use super::object::{self, OBJECT};
-use super::surf::{self, SURF};
+use super::surf::SURF;
 use super::{bsurf_sf_t, common_, ffi_};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 

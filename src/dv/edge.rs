@@ -1,6 +1,6 @@
 use super::object::{self, OBJECT};
-use super::topol::{self, TOPOL};
-use super::{array_, common_, ffi_, interval_t, logical_t, vertex};
+use super::topol::TOPOL;
+use super::{array_, common_, curve, ffi_, interval_t, logical_t, vertex};
 use std::ffi;
 
 /* DV_EDGE_attach_curves_o_t */
@@ -54,11 +54,11 @@ impl OBJECT for EDGE_t {
 impl TOPOL for EDGE_t {}
 
 impl EDGE_t {
-    pub fn ask_curve(&self) -> common_::DVResult<i32> {
+    pub fn ask_curve(&self) -> common_::DVResult<curve::CURVE_t> {
         let mut curve = object::NULL;
 
         common_::wrap_result(unsafe { DV_EDGE_ask_curve(self.tag(), &mut curve) }, || {
-            curve
+            curve.into()
         })
     }
 

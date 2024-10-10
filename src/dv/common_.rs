@@ -1,4 +1,4 @@
-use super::{enum_, error, ffi_};
+use super::{error, ffi_};
 
 pub type DVResult<U> = Result<U, error::code_e>;
 

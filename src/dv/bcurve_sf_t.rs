@@ -1,4 +1,4 @@
-use super::{array_, bcurve, common_, enum_, ffi_, logical_t};
+use super::{array_, bcurve, enum_, ffi_, logical_t};
 use std::ffi;
 
 /* DV_BCURVE_sf_t */

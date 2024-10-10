@@ -1,5 +1,5 @@
-use super::{common_, enum_, ffi_, logical_t};
-use std::ffi;
+use super::{common_, enum_, error, ffi_, logical_t, CLASS_e};
+use std::ops::Deref;
 
 #[link(name = "differvoid")]
 extern "C" {
@@ -15,23 +15,51 @@ extern "C" {
     ) -> ffi_::DV_ERROR_code_t;
 }
 
-pub fn ask_superclass(class: enum_::CLASS_e) -> common_::DVResult<enum_::CLASS_e> {
-    let mut superclass: ffi_::DV_CLASS_t = enum_::CLASS_e::null.into();
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct CLASS_t(enum_::CLASS_e);
 
-    common_::wrap_result(
-        unsafe { DV_CLASS_ask_superclass(class.into(), &mut superclass) },
-        || superclass.try_into().unwrap(),
-    )
+impl From<enum_::CLASS_e> for CLASS_t {
+    fn from(value: enum_::CLASS_e) -> Self {
+        Self(value)
+    }
 }
 
-pub fn is_subclass(
-    may_be_subclass: enum_::CLASS_e,
-    class: enum_::CLASS_e,
-) -> common_::DVResult<bool> {
-    let mut is_subclass = logical_t::FALSE;
+impl TryFrom<i32> for CLASS_t {
+    type Error = error::code_e;
 
-    common_::wrap_result(
-        unsafe { DV_CLASS_is_subclass(may_be_subclass.into(), class.into(), &mut is_subclass) },
-        || logical_t::to_bool(is_subclass),
-    )
+    fn try_from(value: i32) -> Result<Self, Self::Error> {
+        if let Ok(v) = CLASS_e::try_from(value) {
+            Ok(v.into())
+        } else {
+            Err(error::code_e::unset)
+        }
+    }
+}
+
+impl Deref for CLASS_t {
+    type Target = enum_::CLASS_e;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
+impl CLASS_t {
+    pub fn ask_superclass(&self) -> common_::DVResult<CLASS_t> {
+        let mut superclass: ffi_::DV_CLASS_t = enum_::CLASS_e::null.into();
+
+        common_::wrap_result(
+            unsafe { DV_CLASS_ask_superclass(self.0.into(), &mut superclass) },
+            || superclass.try_into().unwrap(),
+        )
+    }
+
+    pub fn is_subclass(&self, class: CLASS_t) -> common_::DVResult<bool> {
+        let mut is_subclass = logical_t::FALSE;
+
+        common_::wrap_result(
+            unsafe { DV_CLASS_is_subclass(self.0.into(), class.0.into(), &mut is_subclass) },
+            || logical_t::to_bool(is_subclass),
+        )
+    }
 }
