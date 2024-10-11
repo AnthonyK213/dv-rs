@@ -1,4 +1,5 @@
-use super::{common_, ffi_, object, xyz_t};
+use super::object::{self, OBJECT};
+use super::{common_, ffi_, poly, xyz_t};
 use std::ffi;
 
 #[link(name = "differvoid")]
@@ -15,11 +16,11 @@ pub fn create_tetrasphere(
     center: &xyz_t::PNT3D_t,
     radius: f64,
     level: i32,
-) -> common_::DVResult<ffi_::DV_POLY_t> {
-    let mut tetrasphere: ffi_::DV_POLY_t = object::NULL;
+) -> common_::DVResult<poly::POLY_t> {
+    let mut tetrasphere = object::NULL;
 
     common_::wrap_result(
         unsafe { DV_TESSEL_create_tetrasphere(center, radius, level, &mut tetrasphere) },
-        || tetrasphere,
+        || tetrasphere.into(),
     )
 }

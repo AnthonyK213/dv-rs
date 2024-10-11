@@ -1,4 +1,7 @@
-use super::{common_, curve, ffi_, geom, line_sf_t, object};
+use super::curve::CURVE;
+use super::geom::GEOM;
+use super::object::OBJECT;
+use super::{common_, ffi_, line_sf_t, object};
 
 #[link(name = "differvoid")]
 extern "C" {
@@ -37,15 +40,15 @@ impl From<i32> for LINE_t {
     }
 }
 
-impl object::OBJECT for LINE_t {
+impl OBJECT for LINE_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl geom::GEOM for LINE_t {}
+impl GEOM for LINE_t {}
 
-impl curve::CURVE for LINE_t {}
+impl CURVE for LINE_t {}
 
 #[cfg(test)]
 mod tests {

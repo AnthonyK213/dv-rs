@@ -63,7 +63,7 @@ impl BCURVE_t {
         )
     }
 
-    pub fn create(bcurve_sf: &bcurve_sf_t::BCURVE_sf_t) -> common_::DVResult<BCURVE_t> {
+    pub fn create(bcurve_sf: &bcurve_sf_t::BCURVE_sf_t) -> common_::DVResult<Self> {
         let mut bcurve = object::NULL;
 
         common_::wrap_result(

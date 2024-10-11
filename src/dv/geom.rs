@@ -2,6 +2,7 @@ use super::object::{self, OBJECT};
 use super::{common_, ffi_, logical_t};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
+#[link(name = "differvoid")]
 extern "C" {
     fn DV_GEOM_copy(geom: ffi_::DV_GEOM_t, copy: *mut ffi_::DV_GEOM_t) -> ffi_::DV_ERROR_code_t;
 
@@ -22,9 +23,12 @@ pub enum copy_e {
 }
 
 pub trait GEOM: OBJECT {
-    fn copy(&self) -> common_::DVResult<i32> {
+    fn copy(&self) -> common_::DVResult<GEOM_t> {
         let mut copy = object::NULL;
-        common_::wrap_result(unsafe { DV_GEOM_copy(self.tag(), &mut copy) }, || copy)
+
+        common_::wrap_result(unsafe { DV_GEOM_copy(self.tag(), &mut copy) }, || {
+            copy.into()
+        })
     }
 
     fn is_valid(&self) -> common_::DVResult<bool> {
@@ -36,3 +40,20 @@ pub trait GEOM: OBJECT {
         )
     }
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct GEOM_t(ffi_::DV_GEOM_t);
+
+impl From<i32> for GEOM_t {
+    fn from(value: i32) -> Self {
+        Self(value)
+    }
+}
+
+impl OBJECT for GEOM_t {
+    fn tag(&self) -> i32 {
+        self.0
+    }
+}
+
+impl GEOM for GEOM_t {}

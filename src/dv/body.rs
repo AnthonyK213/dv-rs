@@ -1,15 +1,24 @@
 use super::object::{self, OBJECT};
 use super::topol::{self, TOPOL};
-use super::{array_, axis2_sf_t, common_, ffi_};
+use super::{array_, axis2_sf_t, common_, enum_, face, ffi_};
 use std::ffi;
 
 /* DV_BODY_boolean_o_t */
 
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
-struct DV_BODY_boolean_o_t {
+#[derive(Debug)]
+pub(crate) struct DV_BODY_boolean_o_t {
     o_t_version: ffi::c_int,
     function: ffi_::DV_boolean_function_t,
+}
+
+impl Default for DV_BODY_boolean_o_t {
+    fn default() -> Self {
+        Self {
+            o_t_version: 1,
+            function: enum_::boolean_function_e::unite_c.into(),
+        }
+    }
 }
 
 #[link(name = "differvoid")]
@@ -77,6 +86,31 @@ extern "C" {
     ) -> ffi_::DV_ERROR_code_t;
 }
 
+#[derive(Debug, Default)]
+pub struct boolean_o_t {
+    __data: DV_BODY_boolean_o_t,
+}
+
+impl boolean_o_t {
+    pub fn get_function(&self) -> enum_::boolean_function_e {
+        self.__data.function.try_into().unwrap()
+    }
+
+    pub fn set_function(&mut self, value: enum_::boolean_function_e) {
+        self.__data.function = value.into();
+    }
+}
+
+impl boolean_o_t {
+    pub(crate) fn get_data(&self) -> &DV_BODY_boolean_o_t {
+        &self.__data
+    }
+
+    pub(crate) fn get_data_mut(&mut self) -> &mut DV_BODY_boolean_o_t {
+        &mut self.__data
+    }
+}
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct BODY_t(ffi_::DV_BODY_t);
 
@@ -95,13 +129,29 @@ impl OBJECT for BODY_t {
 impl TOPOL for BODY_t {}
 
 impl BODY_t {
-    pub fn ask_faces(&self) -> common_::DVResult<array_::Int32Array> {
+    pub fn ask_faces(&self) -> common_::DVResult<object::ObjectArray<face::FACE_t>> {
         let mut n_faces: i32 = 0;
         let mut faces: *mut ffi_::DV_FACE_t = std::ptr::null_mut();
 
         common_::wrap_result(
             unsafe { DV_BODY_ask_faces(self.0, &mut n_faces, &mut faces) },
-            || array_::Array::new(faces, n_faces),
+            || array_::Array::new(faces, n_faces).into(),
+        )
+    }
+
+    pub fn boolean(&self, tools: &[BODY_t], options: &boolean_o_t) -> common_::DVResult<()> {
+        let tool_array: object::ObjectArray<BODY_t> = tools.into();
+
+        common_::wrap_result(
+            unsafe {
+                DV_BODY_boolean(
+                    self.tag(),
+                    tool_array.len(),
+                    tool_array.as_ptr(),
+                    options.get_data(),
+                )
+            },
+            || (),
         )
     }
 
@@ -132,11 +182,11 @@ mod tests {
         let faces = solid_block.ask_faces().unwrap();
         assert_eq!(6, faces.len());
 
-        let loop_ = dv::FACE_t::from(faces[0]).ask_first_loop().unwrap();
+        let loop_ = faces.val(0).ask_first_loop().unwrap();
         let fins = loop_.ask_fins().unwrap();
         assert_eq!(4, fins.len());
 
-        let edge = dv::FIN_t::from(fins[0]).ask_edge().unwrap();
+        let edge = fins.val(0).ask_edge().unwrap();
         let vertices = edge.ask_vertices().unwrap();
     }
 }

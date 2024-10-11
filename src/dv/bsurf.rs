@@ -68,7 +68,7 @@ impl BSURF_t {
         )
     }
 
-    pub fn create(bsurf_sf: &bsurf_sf_t::BSURF_sf_t) -> common_::DVResult<BSURF_t> {
+    pub fn create(bsurf_sf: &bsurf_sf_t::BSURF_sf_t) -> common_::DVResult<Self> {
         let mut bsurf = object::NULL;
 
         common_::wrap_result(

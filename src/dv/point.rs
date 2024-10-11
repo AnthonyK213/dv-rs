@@ -1,4 +1,6 @@
-use super::{common_, ffi_, geom, object, point_sf_t};
+use super::geom::GEOM;
+use super::object::{self, OBJECT};
+use super::{common_, ffi_, point_sf_t};
 
 #[link(name = "differvoid")]
 extern "C" {
@@ -22,13 +24,13 @@ impl From<i32> for POINT_t {
     }
 }
 
-impl object::OBJECT for POINT_t {
+impl OBJECT for POINT_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl geom::GEOM for POINT_t {}
+impl GEOM for POINT_t {}
 
 impl POINT_t {
     pub fn ask(&self) -> common_::DVResult<point_sf_t::POINT_sf_t> {

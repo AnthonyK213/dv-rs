@@ -1,4 +1,6 @@
-use super::{array_, common_, ffi_, object, topol};
+use super::object::{self, OBJECT};
+use super::topol::TOPOL;
+use super::{array_, common_, ffi_, fin};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use std::ffi;
 
@@ -30,22 +32,22 @@ impl From<i32> for LOOP_t {
     }
 }
 
-impl object::OBJECT for LOOP_t {
+impl OBJECT for LOOP_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl topol::TOPOL for LOOP_t {}
+impl TOPOL for LOOP_t {}
 
 impl LOOP_t {
-    pub fn ask_fins(&self) -> common_::DVResult<array_::Int32Array> {
+    pub fn ask_fins(&self) -> common_::DVResult<object::ObjectArray<fin::FIN_t>> {
         let mut n_fins = 0_i32;
         let mut fins: *mut ffi_::DV_FIN_t = std::ptr::null_mut();
 
         common_::wrap_result(
             unsafe { DV_LOOP_ask_fins(self.0, &mut n_fins, &mut fins) },
-            || array_::Array::new(fins, n_fins),
+            || array_::Array::new(fins, n_fins).into(),
         )
     }
 }
