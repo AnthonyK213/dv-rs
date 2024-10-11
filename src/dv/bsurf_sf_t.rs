@@ -1,4 +1,4 @@
-use super::{array_, bsurf, enum_, ffi_, logical_t};
+use super::{alias_, array_, bsurf, enum_, ffi_, logical_t};
 use std::ffi;
 
 /* DV_BSURF_sf_t */
@@ -58,11 +58,11 @@ impl Default for DV_BSURF_sf_t {
 #[derive(Debug, Default)]
 pub struct BSURF_sf_t {
     __data: DV_BSURF_sf_t,
-    __vertex: array_::DoubleArray,
-    __u_knot_mult: array_::Int32Array,
-    __v_knot_mult: array_::Int32Array,
-    __u_knot: array_::DoubleArray,
-    __v_knot: array_::DoubleArray,
+    __vertex: alias_::DoubleArray,
+    __u_knot_mult: alias_::Int32Array,
+    __v_knot_mult: alias_::Int32Array,
+    __u_knot: alias_::DoubleArray,
+    __v_knot: alias_::DoubleArray,
 }
 
 impl BSURF_sf_t {
@@ -96,7 +96,7 @@ impl BSURF_sf_t {
         self.__data.n_v_vertices
     }
 
-    pub fn get_vertex(&self) -> &array_::DoubleArray {
+    pub fn get_vertex(&self) -> &alias_::DoubleArray {
         &self.__vertex
     }
 
@@ -104,19 +104,19 @@ impl BSURF_sf_t {
         self.__data.form.try_into().unwrap()
     }
 
-    pub fn get_u_knot_mult(&self) -> &array_::Int32Array {
+    pub fn get_u_knot_mult(&self) -> &alias_::Int32Array {
         &self.__u_knot_mult
     }
 
-    pub fn get_v_knot_mult(&self) -> &array_::Int32Array {
+    pub fn get_v_knot_mult(&self) -> &alias_::Int32Array {
         &self.__v_knot_mult
     }
 
-    pub fn get_u_knot(&self) -> &array_::DoubleArray {
+    pub fn get_u_knot(&self) -> &alias_::DoubleArray {
         &self.__u_knot
     }
 
-    pub fn get_v_knot(&self) -> &array_::DoubleArray {
+    pub fn get_v_knot(&self) -> &alias_::DoubleArray {
         &self.__v_knot
     }
 

@@ -1,4 +1,4 @@
-use super::{array_, bcurve, enum_, ffi_, logical_t};
+use super::{alias_, array_, bcurve, enum_, ffi_, logical_t};
 use std::ffi;
 
 /* DV_BCURVE_sf_t */
@@ -42,9 +42,9 @@ impl Default for DV_BCURVE_sf_t {
 #[derive(Debug, Default)]
 pub struct BCURVE_sf_t {
     __data: DV_BCURVE_sf_t,
-    __vertex: array_::DoubleArray,
-    __knot: array_::DoubleArray,
-    __knot_mult: array_::Int32Array,
+    __vertex: alias_::DoubleArray,
+    __knot: alias_::DoubleArray,
+    __knot_mult: alias_::Int32Array,
 }
 
 impl BCURVE_sf_t {
@@ -66,7 +66,7 @@ impl BCURVE_sf_t {
         logical_t::to_bool(self.__data.is_rational)
     }
 
-    pub fn get_vertex(&self) -> &array_::DoubleArray {
+    pub fn get_vertex(&self) -> &alias_::DoubleArray {
         &self.__vertex
     }
 
@@ -74,11 +74,11 @@ impl BCURVE_sf_t {
         self.__data.form.try_into().unwrap()
     }
 
-    pub fn get_knot_mult(&self) -> &array_::Int32Array {
+    pub fn get_knot_mult(&self) -> &alias_::Int32Array {
         &self.__knot_mult
     }
 
-    pub fn get_knot(&self) -> &array_::DoubleArray {
+    pub fn get_knot(&self) -> &alias_::DoubleArray {
         &self.__knot
     }
 

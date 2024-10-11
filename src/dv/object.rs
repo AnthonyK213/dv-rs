@@ -1,4 +1,4 @@
-use super::{array_, class, common_, enum_, ffi_};
+use super::{alias_, class, common_, enum_, ffi_};
 use std::marker::PhantomData;
 use std::ops::Deref;
 
@@ -51,86 +51,5 @@ impl From<i32> for OBJECT_t {
 impl OBJECT for OBJECT_t {
     fn tag(&self) -> i32 {
         self.0
-    }
-}
-
-pub struct ObjectArray<T>
-where
-    T: OBJECT,
-{
-    __data: array_::Int32Array,
-    __mark: PhantomData<T>,
-}
-
-impl<T> From<&[T]> for ObjectArray<T>
-where
-    T: OBJECT,
-{
-    fn from(value: &[T]) -> Self {
-        let mut array = array_::Int32Array::alloc(value.len() as i32);
-
-        let mut index: i32 = 0;
-        for v in value {
-            array[index] = v.tag();
-            index = index + 1;
-        }
-
-        Self {
-            __data: array,
-            __mark: PhantomData::default(),
-        }
-    }
-}
-
-impl<T> From<&[i32]> for ObjectArray<T>
-where
-    T: OBJECT,
-{
-    fn from(value: &[i32]) -> Self {
-        Self {
-            __data: value.into(),
-            __mark: PhantomData::default(),
-        }
-    }
-}
-
-impl<T> From<array_::Int32Array> for ObjectArray<T>
-where
-    T: OBJECT,
-{
-    fn from(value: array_::Int32Array) -> Self {
-        Self {
-            __data: value,
-            __mark: PhantomData::default(),
-        }
-    }
-}
-
-impl<T> Deref for ObjectArray<T>
-where
-    T: OBJECT,
-{
-    type Target = array_::Int32Array;
-
-    #[inline]
-    fn deref(&self) -> &Self::Target {
-        &self.__data
-    }
-}
-
-impl<T> ObjectArray<T>
-where
-    T: OBJECT,
-{
-    pub fn len(&self) -> i32 {
-        self.__data.len()
-    }
-
-    pub fn val(&self, index: i32) -> T {
-        self.__data[index].into()
-    }
-
-    pub fn set_val(&mut self, index: i32, value: T) {
-        self.__data[index] = value.tag();
     }
 }

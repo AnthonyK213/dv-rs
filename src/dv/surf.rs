@@ -1,6 +1,6 @@
 use super::geom::GEOM;
 use super::object::OBJECT;
-use super::{array_, common_, ffi_, xy_t, xyz_t};
+use super::{alias_, common_, ffi_, xy_t, xyz_t};
 use std::ffi;
 
 extern "C" {
@@ -19,8 +19,8 @@ pub trait SURF: GEOM {
         uv: xy_t::UV_t,
         n_u_derivs: i32,
         n_v_derivs: i32,
-    ) -> common_::DVResult<array_::XYZArray> {
-        let mut p = array_::XYZArray::alloc((n_u_derivs + 1) * (n_v_derivs + 1));
+    ) -> common_::DVResult<alias_::XYZArray> {
+        let mut p = alias_::XYZArray::alloc((n_u_derivs + 1) * (n_v_derivs + 1));
 
         common_::wrap_result(
             unsafe { DV_SURF_eval(self.tag(), uv, n_u_derivs, n_v_derivs, p.as_mut_ptr()) },

@@ -1,6 +1,6 @@
 use super::geom::GEOM;
 use super::object::OBJECT;
-use super::{array_, common_, ffi_, interval_t, logical_t, xyz_t};
+use super::{alias_, common_, ffi_, interval_t, logical_t, xyz_t};
 use std::ffi;
 
 /* DV_CURVE_make_wire_body_o_t */
@@ -51,8 +51,8 @@ pub trait CURVE: OBJECT {
         )
     }
 
-    fn eval(&self, t: f64, n_derivs: i32) -> common_::DVResult<array_::XYZArray> {
-        let mut p = array_::XYZArray::alloc(n_derivs + 1);
+    fn eval(&self, t: f64, n_derivs: i32) -> common_::DVResult<alias_::XYZArray> {
+        let mut p = alias_::XYZArray::alloc(n_derivs + 1);
 
         common_::wrap_result(
             unsafe { DV_CURVE_eval(self.tag(), t, n_derivs, p.as_mut_ptr()) },

@@ -1,6 +1,6 @@
 use super::object::{self, OBJECT};
 use super::topol::TOPOL;
-use super::{array_, common_, ffi_, fin};
+use super::{alias_, array_, common_, ffi_, fin};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use std::ffi;
 
@@ -41,7 +41,7 @@ impl OBJECT for LOOP_t {
 impl TOPOL for LOOP_t {}
 
 impl LOOP_t {
-    pub fn ask_fins(&self) -> common_::DVResult<object::ObjectArray<fin::FIN_t>> {
+    pub fn ask_fins(&self) -> common_::DVResult<alias_::FinArray> {
         let mut n_fins = 0_i32;
         let mut fins: *mut ffi_::DV_FIN_t = std::ptr::null_mut();
 

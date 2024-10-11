@@ -1,7 +1,9 @@
+use super::object::{self, OBJECT};
 use super::{ffi_, triangle_t, xy_t, xyz_t};
 use std::convert::From;
 use std::default::Default;
 use std::ffi;
+use std::marker::PhantomData;
 use std::ops::{Deref, Drop, Index, IndexMut};
 
 #[derive(Debug)]
@@ -114,8 +116,83 @@ impl<T> Array<T> {
     }
 }
 
-pub type DoubleArray = Array<f64>;
-pub type Int32Array = Array<i32>;
-pub type TriangleArray = Array<triangle_t::TRIANGLE_t>;
-pub type XYArray = Array<xy_t::XY_t>;
-pub type XYZArray = Array<xyz_t::XYZ_t>;
+pub struct ObjectArray<T>
+where
+    T: OBJECT,
+{
+    __data: Array<i32>,
+    __mark: PhantomData<T>,
+}
+
+impl<T> From<&[T]> for ObjectArray<T>
+where
+    T: OBJECT,
+{
+    fn from(value: &[T]) -> Self {
+        let mut array = Array::<i32>::alloc(value.len() as i32);
+
+        let mut index: i32 = 0;
+        for v in value {
+            array[index] = v.tag();
+            index = index + 1;
+        }
+
+        Self {
+            __data: array,
+            __mark: PhantomData::default(),
+        }
+    }
+}
+
+impl<T> From<&[i32]> for ObjectArray<T>
+where
+    T: OBJECT,
+{
+    fn from(value: &[i32]) -> Self {
+        Self {
+            __data: value.into(),
+            __mark: PhantomData::default(),
+        }
+    }
+}
+
+impl<T> From<Array<i32>> for ObjectArray<T>
+where
+    T: OBJECT,
+{
+    fn from(value: Array<i32>) -> Self {
+        Self {
+            __data: value,
+            __mark: PhantomData::default(),
+        }
+    }
+}
+
+impl<T> Deref for ObjectArray<T>
+where
+    T: OBJECT,
+{
+    type Target = Array<i32>;
+
+    #[inline]
+    fn deref(&self) -> &Self::Target {
+        &self.__data
+    }
+}
+
+impl<T> ObjectArray<T>
+where
+    T: OBJECT,
+{
+    pub fn len(&self) -> i32 {
+        self.__data.len()
+    }
+
+    pub fn val(&self, index: i32) -> T {
+        self.__data[index].into()
+    }
+
+    pub fn set_val(&mut self, index: i32, value: T) {
+        self.__data[index] = value.tag();
+    }
+}

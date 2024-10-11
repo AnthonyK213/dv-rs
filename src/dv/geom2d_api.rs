@@ -1,4 +1,4 @@
-use super::{array_, common_, enum_, ffi_, xy_t};
+use super::{alias_, array_, common_, enum_, ffi_, xy_t};
 use std::ffi;
 
 #[link(name = "differvoid")]
@@ -23,7 +23,7 @@ extern "C" {
 pub fn convex_hull(
     points: &[xy_t::PNT2D_t],
     algo: enum_::ALGO_e,
-) -> common_::DVResult<(i32, array_::Int32Array, array_::XYArray)> {
+) -> common_::DVResult<(i32, alias_::Int32Array, alias_::XYArray)> {
     let mut n_convex_points: i32 = 0;
     let mut convex_indices: *mut ffi::c_int = std::ptr::null_mut();
     let mut convex_points: *mut xy_t::PNT2D_t = std::ptr::null_mut();

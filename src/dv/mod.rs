@@ -2,6 +2,7 @@
 #![allow(non_snake_case)]
 #![allow(unused)]
 
+mod alias_;
 mod array_;
 mod common_;
 mod enum_;
@@ -45,7 +46,7 @@ pub mod point;
 pub mod poly;
 pub mod tessel;
 
-pub use array_::*;
+pub use alias_::*;
 pub use common_::*;
 pub use enum_::*;
 

@@ -1,6 +1,6 @@
 use super::object::{self, OBJECT};
 use super::topol::{self, TOPOL};
-use super::{array_, axis2_sf_t, common_, enum_, face, ffi_};
+use super::{alias_, array_, axis2_sf_t, common_, enum_, face, ffi_};
 use std::ffi;
 
 /* DV_BODY_boolean_o_t */
@@ -129,7 +129,7 @@ impl OBJECT for BODY_t {
 impl TOPOL for BODY_t {}
 
 impl BODY_t {
-    pub fn ask_faces(&self) -> common_::DVResult<object::ObjectArray<face::FACE_t>> {
+    pub fn ask_faces(&self) -> common_::DVResult<alias_::FaceArray> {
         let mut n_faces: i32 = 0;
         let mut faces: *mut ffi_::DV_FACE_t = std::ptr::null_mut();
 
@@ -140,7 +140,7 @@ impl BODY_t {
     }
 
     pub fn boolean(&self, tools: &[BODY_t], options: &boolean_o_t) -> common_::DVResult<()> {
-        let tool_array: object::ObjectArray<BODY_t> = tools.into();
+        let tool_array: alias_::BodyArray = tools.into();
 
         common_::wrap_result(
             unsafe {

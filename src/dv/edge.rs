@@ -1,6 +1,6 @@
 use super::object::{self, OBJECT};
 use super::topol::TOPOL;
-use super::{array_, common_, curve, ffi_, interval_t, logical_t, vertex};
+use super::{alias_, common_, curve, ffi_, interval_t, logical_t, vertex};
 use std::ffi;
 
 /* DV_EDGE_attach_curves_o_t */
@@ -72,7 +72,7 @@ impl EDGE_t {
     }
 
     pub fn ask_vertices(&self) -> common_::DVResult<[vertex::VERTEX_t; 2]> {
-        let mut vertices = array_::Int32Array::alloc(2);
+        let mut vertices = alias_::Int32Array::alloc(2);
 
         common_::wrap_result(
             unsafe { DV_EDGE_ask_vertices(self.0, vertices.as_mut_ptr()) },
