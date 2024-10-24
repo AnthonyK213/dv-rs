@@ -1,4 +1,4 @@
-use super::object::{self, OBJECT};
+use super::entity::{self, ENTITY};
 use super::topol::TOPOL;
 use super::{alias_, common_, curve, ffi_, interval_t, logical_t, vertex};
 use std::ffi;
@@ -45,7 +45,7 @@ impl From<i32> for EDGE_t {
     }
 }
 
-impl OBJECT for EDGE_t {
+impl ENTITY for EDGE_t {
     fn tag(&self) -> i32 {
         self.0
     }
@@ -55,7 +55,7 @@ impl TOPOL for EDGE_t {}
 
 impl EDGE_t {
     pub fn ask_curve(&self) -> common_::DVResult<curve::CURVE_t> {
-        let mut curve = object::NULL;
+        let mut curve = entity::NULL;
 
         common_::wrap_result(unsafe { DV_EDGE_ask_curve(self.tag(), &mut curve) }, || {
             curve.into()

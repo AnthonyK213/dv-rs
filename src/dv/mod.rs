@@ -35,12 +35,12 @@ pub mod bsurf;
 pub mod class;
 pub mod curve;
 pub mod edge;
+pub mod entity;
 pub mod error;
 pub mod geom;
 pub mod geom2d_api;
 pub mod line;
 pub mod loop_;
-pub mod object;
 pub mod plane;
 pub mod point;
 pub mod poly;
@@ -66,8 +66,8 @@ pub use xy_t::*;
 pub use xyz_t::*;
 
 pub use curve::*;
+pub use entity::*;
 pub use geom::*;
-pub use object::*;
 pub use surf::*;
 pub use topol::*;
 

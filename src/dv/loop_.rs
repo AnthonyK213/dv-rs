@@ -1,4 +1,4 @@
-use super::object::{self, OBJECT};
+use super::entity::{self, ENTITY};
 use super::topol::TOPOL;
 use super::{alias_, array_, common_, ffi_, fin};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
@@ -32,7 +32,7 @@ impl From<i32> for LOOP_t {
     }
 }
 
-impl OBJECT for LOOP_t {
+impl ENTITY for LOOP_t {
     fn tag(&self) -> i32 {
         self.0
     }

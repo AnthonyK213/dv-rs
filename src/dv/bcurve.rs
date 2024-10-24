@@ -1,6 +1,6 @@
 use super::curve::CURVE;
+use super::entity::{self, ENTITY};
 use super::geom::GEOM;
-use super::object::{self, OBJECT};
 use super::{bcurve_sf_t, common_, ffi_};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
@@ -40,7 +40,7 @@ impl From<i32> for BCURVE_t {
     }
 }
 
-impl OBJECT for BCURVE_t {
+impl ENTITY for BCURVE_t {
     fn tag(&self) -> i32 {
         self.0
     }
@@ -64,7 +64,7 @@ impl BCURVE_t {
     }
 
     pub fn create(bcurve_sf: &bcurve_sf_t::BCURVE_sf_t) -> common_::DVResult<Self> {
-        let mut bcurve = object::NULL;
+        let mut bcurve = entity::NULL;
 
         common_::wrap_result(
             unsafe { DV_BCURVE_create(bcurve_sf.get_data(), &mut bcurve) },
@@ -75,7 +75,7 @@ impl BCURVE_t {
 
 #[cfg(test)]
 mod tests {
-    use crate::dv::{self, OBJECT};
+    use crate::dv::{self, ENTITY};
 
     #[test]
     fn create_ask_test() {

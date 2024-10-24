@@ -11,7 +11,7 @@ pub enum code_e {
     initialized,
     null_arg_address,
     invalid_value,
-    invalid_object,
+    invalid_entity,
     invalid_tag,
     still_referenced,
     no_intersection,
@@ -40,5 +40,7 @@ pub enum code_e {
     no_common_vertex,
     bad_vertex,
     cant_get_point,
+    clamped_by_range,
+    constant_function,
     unset,
 }

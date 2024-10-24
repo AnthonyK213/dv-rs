@@ -1,4 +1,4 @@
-use super::object::{self, OBJECT};
+use super::entity::{self, ENTITY};
 use super::{common_, ffi_, poly, xyz_t};
 use std::ffi;
 
@@ -17,7 +17,7 @@ pub fn create_tetrasphere(
     radius: f64,
     level: i32,
 ) -> common_::DVResult<poly::POLY_t> {
-    let mut tetrasphere = object::NULL;
+    let mut tetrasphere = entity::NULL;
 
     common_::wrap_result(
         unsafe { DV_TESSEL_create_tetrasphere(center, radius, level, &mut tetrasphere) },

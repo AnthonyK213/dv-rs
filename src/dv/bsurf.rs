@@ -1,5 +1,5 @@
+use super::entity::{self, ENTITY};
 use super::geom::GEOM;
-use super::object::{self, OBJECT};
 use super::surf::SURF;
 use super::{bsurf_sf_t, common_, ffi_};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
@@ -45,7 +45,7 @@ impl From<i32> for BSURF_t {
     }
 }
 
-impl OBJECT for BSURF_t {
+impl ENTITY for BSURF_t {
     fn tag(&self) -> i32 {
         self.0
     }
@@ -69,7 +69,7 @@ impl BSURF_t {
     }
 
     pub fn create(bsurf_sf: &bsurf_sf_t::BSURF_sf_t) -> common_::DVResult<Self> {
-        let mut bsurf = object::NULL;
+        let mut bsurf = entity::NULL;
 
         common_::wrap_result(
             unsafe { DV_BSURF_create(bsurf_sf.get_data(), &mut bsurf) },

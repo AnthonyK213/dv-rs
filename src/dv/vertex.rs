@@ -1,4 +1,4 @@
-use super::object::{self, OBJECT};
+use super::entity::{self, ENTITY};
 use super::topol::TOPOL;
 use super::{common_, ffi_, point};
 use std::ffi;
@@ -25,7 +25,7 @@ impl From<i32> for VERTEX_t {
     }
 }
 
-impl OBJECT for VERTEX_t {
+impl ENTITY for VERTEX_t {
     fn tag(&self) -> i32 {
         self.0
     }
@@ -35,7 +35,7 @@ impl TOPOL for VERTEX_t {}
 
 impl VERTEX_t {
     pub fn ask_point(&self) -> common_::DVResult<point::POINT_t> {
-        let mut point = object::NULL;
+        let mut point = entity::NULL;
 
         common_::wrap_result(
             unsafe { DV_VERTEX_ask_point(self.tag(), &mut point) },

@@ -1,7 +1,7 @@
 use super::curve::CURVE;
+use super::entity::ENTITY;
 use super::geom::GEOM;
-use super::object::OBJECT;
-use super::{common_, ffi_, line_sf_t, object};
+use super::{common_, entity, ffi_, line_sf_t};
 
 #[link(name = "differvoid")]
 extern "C" {
@@ -26,7 +26,7 @@ impl LINE_t {
     }
 
     pub fn create(line_sf: &line_sf_t::LINE_sf_t) -> common_::DVResult<Self> {
-        let mut line = object::NULL;
+        let mut line = entity::NULL;
 
         common_::wrap_result(unsafe { DV_LINE_create(line_sf, &mut line) }, || {
             line.into()
@@ -40,7 +40,7 @@ impl From<i32> for LINE_t {
     }
 }
 
-impl OBJECT for LINE_t {
+impl ENTITY for LINE_t {
     fn tag(&self) -> i32 {
         self.0
     }

@@ -6,8 +6,9 @@ use num_enum::{IntoPrimitive, TryFromPrimitive};
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Hash, IntoPrimitive, TryFromPrimitive)]
 pub enum CLASS_e {
     null = 0,
-    class_,
-    object,
+    class,
+    item,
+    entity,
     geometry2d,
     point2d,
     cartesian_point2d,
@@ -50,6 +51,8 @@ pub enum CLASS_e {
     toroidal_surface,
     plane,
     offset_surface,
+    spun_surface,
+    swept_surface,
     mesh,
     triangulation,
     point_rep,
@@ -58,6 +61,7 @@ pub enum CLASS_e {
     curve_rep,
     curve_on_surface,
     topol,
+    part,
     body,
     region,
     shell,

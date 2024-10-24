@@ -1,5 +1,5 @@
+use super::entity::{self, ENTITY};
 use super::geom::GEOM;
-use super::object::{self, OBJECT};
 use super::{common_, ffi_, point_sf_t};
 
 #[link(name = "differvoid")]
@@ -24,7 +24,7 @@ impl From<i32> for POINT_t {
     }
 }
 
-impl OBJECT for POINT_t {
+impl ENTITY for POINT_t {
     fn tag(&self) -> i32 {
         self.0
     }
@@ -39,7 +39,7 @@ impl POINT_t {
     }
 
     pub fn create(point_sf: &point_sf_t::POINT_sf_t) -> common_::DVResult<Self> {
-        let mut point = object::NULL;
+        let mut point = entity::NULL;
 
         common_::wrap_result(unsafe { DV_POINT_create(point_sf, &mut point) }, || {
             point.into()

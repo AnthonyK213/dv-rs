@@ -1,4 +1,4 @@
-use super::object::{self, OBJECT};
+use super::entity::{self, ENTITY};
 use super::topol::TOPOL;
 use super::{common_, ffi_, loop_};
 
@@ -19,7 +19,7 @@ impl From<i32> for FACE_t {
     }
 }
 
-impl OBJECT for FACE_t {
+impl ENTITY for FACE_t {
     fn tag(&self) -> i32 {
         self.0
     }
@@ -29,7 +29,7 @@ impl TOPOL for FACE_t {}
 
 impl FACE_t {
     pub fn ask_first_loop(&self) -> common_::DVResult<loop_::LOOP_t> {
-        let mut first_loop = object::NULL;
+        let mut first_loop = entity::NULL;
 
         common_::wrap_result(
             unsafe { DV_FACE_ask_first_loop(self.0, &mut first_loop) },

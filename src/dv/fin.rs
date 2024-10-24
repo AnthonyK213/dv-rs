@@ -1,4 +1,4 @@
-use super::object::{self, OBJECT};
+use super::entity::{self, ENTITY};
 use super::topol::TOPOL;
 use super::{common_, edge, ffi_, logical_t};
 
@@ -21,7 +21,7 @@ impl From<i32> for FIN_t {
     }
 }
 
-impl OBJECT for FIN_t {
+impl ENTITY for FIN_t {
     fn tag(&self) -> i32 {
         self.0
     }
@@ -31,7 +31,7 @@ impl TOPOL for FIN_t {}
 
 impl FIN_t {
     pub fn ask_edge(&self) -> common_::DVResult<edge::EDGE_t> {
-        let mut edge = object::NULL;
+        let mut edge = entity::NULL;
 
         common_::wrap_result(unsafe { DV_FIN_ask_edge(self.tag(), &mut edge) }, || {
             edge.into()

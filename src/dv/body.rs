@@ -1,4 +1,4 @@
-use super::object::{self, OBJECT};
+use super::entity::{self, ENTITY};
 use super::topol::{self, TOPOL};
 use super::{alias_, array_, axis2_sf_t, common_, enum_, face, ffi_};
 use std::ffi;
@@ -120,7 +120,7 @@ impl From<i32> for BODY_t {
     }
 }
 
-impl OBJECT for BODY_t {
+impl ENTITY for BODY_t {
     fn tag(&self) -> i32 {
         self.0
     }
@@ -161,7 +161,7 @@ impl BODY_t {
         z: f64,
         basis_set: &axis2_sf_t::AXIS2_sf_t,
     ) -> common_::DVResult<BODY_t> {
-        let mut body = object::NULL;
+        let mut body = entity::NULL;
 
         common_::wrap_result(
             unsafe { DV_BODY_create_solid_block(x, y, z, basis_set, &mut body) },

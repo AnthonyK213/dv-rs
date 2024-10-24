@@ -1,4 +1,4 @@
-use super::object::{self, OBJECT};
+use super::entity::{self, ENTITY};
 use super::{ffi_, triangle_t, xy_t, xyz_t};
 use std::convert::From;
 use std::default::Default;
@@ -116,17 +116,17 @@ impl<T> Array<T> {
     }
 }
 
-pub struct ObjectArray<T>
+pub struct EntityArray<T>
 where
-    T: OBJECT,
+    T: ENTITY,
 {
     __data: Array<i32>,
     __mark: PhantomData<T>,
 }
 
-impl<T> From<&[T]> for ObjectArray<T>
+impl<T> From<&[T]> for EntityArray<T>
 where
-    T: OBJECT,
+    T: ENTITY,
 {
     fn from(value: &[T]) -> Self {
         let mut array = Array::<i32>::alloc(value.len() as i32);
@@ -144,9 +144,9 @@ where
     }
 }
 
-impl<T> From<&[i32]> for ObjectArray<T>
+impl<T> From<&[i32]> for EntityArray<T>
 where
-    T: OBJECT,
+    T: ENTITY,
 {
     fn from(value: &[i32]) -> Self {
         Self {
@@ -156,9 +156,9 @@ where
     }
 }
 
-impl<T> From<Array<i32>> for ObjectArray<T>
+impl<T> From<Array<i32>> for EntityArray<T>
 where
-    T: OBJECT,
+    T: ENTITY,
 {
     fn from(value: Array<i32>) -> Self {
         Self {
@@ -168,9 +168,9 @@ where
     }
 }
 
-impl<T> Deref for ObjectArray<T>
+impl<T> Deref for EntityArray<T>
 where
-    T: OBJECT,
+    T: ENTITY,
 {
     type Target = Array<i32>;
 
@@ -180,9 +180,9 @@ where
     }
 }
 
-impl<T> ObjectArray<T>
+impl<T> EntityArray<T>
 where
-    T: OBJECT,
+    T: ENTITY,
 {
     pub fn len(&self) -> i32 {
         self.__data.len()

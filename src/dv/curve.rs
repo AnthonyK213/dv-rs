@@ -1,5 +1,5 @@
+use super::entity::ENTITY;
 use super::geom::GEOM;
-use super::object::OBJECT;
 use super::{alias_, common_, ffi_, interval_t, logical_t, xyz_t};
 use std::ffi;
 
@@ -41,7 +41,7 @@ extern "C" {
     ) -> ffi_::DV_ERROR_code_t;
 }
 
-pub trait CURVE: OBJECT {
+pub trait CURVE: ENTITY {
     fn ask_interval(&self) -> common_::DVResult<interval_t::INTERVAL_t> {
         let mut interval = interval_t::INTERVAL_t { t0: 0., t1: 0. };
 
@@ -94,7 +94,7 @@ impl From<i32> for CURVE_t {
     }
 }
 
-impl OBJECT for CURVE_t {
+impl ENTITY for CURVE_t {
     fn tag(&self) -> i32 {
         self.0
     }

@@ -1,5 +1,5 @@
+use super::entity::ENTITY;
 use super::geom::GEOM;
-use super::object::OBJECT;
 use super::{alias_, common_, ffi_, xy_t, xyz_t};
 use std::ffi;
 
@@ -38,7 +38,7 @@ impl From<i32> for SURF_t {
     }
 }
 
-impl OBJECT for SURF_t {
+impl ENTITY for SURF_t {
     fn tag(&self) -> i32 {
         self.0
     }
