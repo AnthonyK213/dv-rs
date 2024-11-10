@@ -38,13 +38,13 @@ pub mod edge;
 pub mod entity;
 pub mod error;
 pub mod geom;
-pub mod geom2d_api;
 pub mod line;
 pub mod loop_;
 pub mod plane;
 pub mod point;
 pub mod poly;
 pub mod tessel;
+pub mod util;
 
 pub use alias_::*;
 pub use common_::*;

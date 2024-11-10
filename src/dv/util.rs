@@ -3,7 +3,7 @@ use std::ffi;
 
 #[link(name = "differvoid")]
 extern "C" {
-    fn DV_GEOM2DAPI_convex_hull(
+    fn DV_UTIL_points_convex_hull_2d(
         n_points: ffi::c_int,
         points: *const xy_t::PNT2D_t,
         algo: ffi_::DV_ALGO_t,
@@ -12,7 +12,7 @@ extern "C" {
         convex_points: *mut *mut xy_t::PNT2D_t,
     ) -> ffi_::DV_ERROR_code_t;
 
-    fn DV_GEOM2DAPI_enclosing_disc(
+    fn DV_UTIL_points_enclosing_disc(
         n_points: ffi::c_int,
         points: *const xy_t::PNT2D_t,
         origin: *mut xy_t::PNT2D_t,
@@ -20,7 +20,7 @@ extern "C" {
     ) -> ffi_::DV_ERROR_code_t;
 }
 
-pub fn convex_hull(
+pub fn points_convex_hull_2d(
     points: &[xy_t::PNT2D_t],
     algo: enum_::ALGO_e,
 ) -> common_::DVResult<(i32, alias_::Int32Array, alias_::XYArray)> {
@@ -30,7 +30,7 @@ pub fn convex_hull(
 
     common_::wrap_result(
         unsafe {
-            DV_GEOM2DAPI_convex_hull(
+            DV_UTIL_points_convex_hull_2d(
                 points.len() as ffi::c_int,
                 points.as_ptr(),
                 algo.into(),
@@ -49,13 +49,13 @@ pub fn convex_hull(
     )
 }
 
-pub fn enclosing_disc(points: &[xy_t::PNT2D_t]) -> common_::DVResult<(xy_t::PNT2D_t, f64)> {
+pub fn points_enclosing_disc(points: &[xy_t::PNT2D_t]) -> common_::DVResult<(xy_t::PNT2D_t, f64)> {
     let mut origin = xy_t::PNT2D_t { x: 0., y: 0. };
     let mut radius: f64 = 0.;
 
     common_::wrap_result(
         unsafe {
-            DV_GEOM2DAPI_enclosing_disc(
+            DV_UTIL_points_enclosing_disc(
                 points.len() as ffi::c_int,
                 points.as_ptr(),
                 &mut origin,
@@ -83,7 +83,7 @@ mod tests {
             dv::PNT2D_t { x: 4., y: 3. },
         ];
 
-        match dv::geom2d_api::convex_hull(&points, dv::ALGO_e::quick_hull_c) {
+        match dv::util::points_convex_hull_2d(&points, dv::ALGO_e::quick_hull_c) {
             Ok(r) => {
                 assert_eq!(7, r.0);
                 assert_eq!(4, r.1[2]);
@@ -109,7 +109,7 @@ mod tests {
             dv::PNT2D_t { x: 4., y: 3. },
         ];
 
-        match dv::geom2d_api::enclosing_disc(&points) {
+        match dv::util::points_enclosing_disc(&points) {
             Ok(r) => {}
             Err(e) => {
                 panic!("Err({:?})", e);
