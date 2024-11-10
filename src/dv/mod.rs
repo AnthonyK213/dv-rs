@@ -43,7 +43,6 @@ pub mod loop_;
 pub mod plane;
 pub mod point;
 pub mod poly;
-pub mod tessel;
 pub mod util;
 
 pub use alias_::*;
