@@ -1,21 +1,16 @@
-use super::entity::ENTITY;
-use super::geom::GEOM;
-use super::{common_, ffi_};
+use crate::dv::{self, ENTITY, GEOM};
 use std::ffi;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct POLY_t(ffi_::DV_POLY_t);
-
-impl From<i32> for POLY_t {
+impl From<i32> for dv::POLY_t {
     fn from(value: i32) -> Self {
         Self(value)
     }
 }
 
-impl ENTITY for POLY_t {
+impl ENTITY for dv::POLY_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl GEOM for POLY_t {}
+impl GEOM for dv::POLY_t {}

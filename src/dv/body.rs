@@ -1,148 +1,135 @@
-use super::entity::{self, ENTITY};
-use super::topol::{self, TOPOL};
-use super::{alias_, array_, axis2_sf_t, common_, enum_, face, ffi_};
+use crate::dv::{self, ENTITY};
 use std::ffi;
-
-/* DV_BODY_boolean_o_t */
-
-#[repr(C)]
-#[derive(Debug)]
-pub(crate) struct DV_BODY_boolean_o_t {
-    o_t_version: ffi::c_int,
-    function: ffi_::DV_boolean_function_t,
-}
-
-impl Default for DV_BODY_boolean_o_t {
-    fn default() -> Self {
-        Self {
-            o_t_version: 1,
-            function: enum_::boolean_function_e::unite_c.into(),
-        }
-    }
-}
 
 #[link(name = "differvoid")]
 extern "C" {
     fn DV_BODY_ask_edges(
-        body: ffi_::DV_BODY_t,
+        body: dv::DV_BODY_t,
         n_edges: *mut ffi::c_int,
-        edges: *mut *mut ffi_::DV_EDGE_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        edges: *mut *mut dv::DV_EDGE_t,
+    ) -> dv::DV_ERROR_code_t;
 
     fn DV_BODY_ask_faces(
-        body: ffi_::DV_BODY_t,
+        body: dv::DV_BODY_t,
         n_faces: *mut ffi::c_int,
-        faces: *mut *mut ffi_::DV_FACE_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        faces: *mut *mut dv::DV_FACE_t,
+    ) -> dv::DV_ERROR_code_t;
 
     fn DV_BODY_ask_fin(
-        body: ffi_::DV_BODY_t,
+        body: dv::DV_BODY_t,
         n_fins: *mut ffi::c_int,
-        fins: *mut *mut ffi_::DV_FIN_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        fins: *mut *mut dv::DV_FIN_t,
+    ) -> dv::DV_ERROR_code_t;
 
     fn DV_BODY_ask_loops(
-        body: ffi_::DV_BODY_t,
+        body: dv::DV_BODY_t,
         n_loops: *mut ffi::c_int,
-        loops: *mut *mut ffi_::DV_LOOP_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        loops: *mut *mut dv::DV_LOOP_t,
+    ) -> dv::DV_ERROR_code_t;
 
-    fn DV_BODY_ask_parent(
-        body: ffi_::DV_BODY_t,
-        parent: *mut ffi_::DV_BODY_t,
-    ) -> ffi_::DV_ERROR_code_t;
+    fn DV_BODY_ask_parent(body: dv::DV_BODY_t, parent: *mut dv::DV_BODY_t) -> dv::DV_ERROR_code_t;
 
     fn DV_BODY_ask_regions(
-        body: ffi_::DV_BODY_t,
+        body: dv::DV_BODY_t,
         n_regions: *mut ffi::c_int,
-        regions: *mut *mut ffi_::DV_REGION_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        regions: *mut *mut dv::DV_REGION_t,
+    ) -> dv::DV_ERROR_code_t;
 
     fn DV_BODY_ask_shells(
-        body: ffi_::DV_BODY_t,
+        body: dv::DV_BODY_t,
         n_shells: *mut ffi::c_int,
-        shells: *mut *mut ffi_::DV_SHELL_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        shells: *mut *mut dv::DV_SHELL_t,
+    ) -> dv::DV_ERROR_code_t;
 
     fn DV_BODY_ask_vertices(
-        body: ffi_::DV_BODY_t,
+        body: dv::DV_BODY_t,
         n_vertices: *mut ffi::c_int,
-        vertices: *mut *mut ffi_::DV_VERTEX_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        vertices: *mut *mut dv::DV_VERTEX_t,
+    ) -> dv::DV_ERROR_code_t;
 
     fn DV_BODY_boolean(
-        target: ffi_::DV_BODY_t,
+        target: dv::DV_BODY_t,
         n_tools: ffi::c_int,
-        tools: *const ffi_::DV_BODY_t,
-        options: *const DV_BODY_boolean_o_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        tools: *const dv::DV_BODY_t,
+        options: *const dv::DV_BODY_boolean_o_t,
+    ) -> dv::DV_ERROR_code_t;
 
     fn DV_BODY_create_solid_block(
         x: ffi::c_double,
         y: ffi::c_double,
         z: ffi::c_double,
-        basis_set: *const axis2_sf_t::AXIS2_sf_t,
-        body: *mut ffi_::DV_BODY_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        basis_set: *const dv::AXIS2_sf_t,
+        body: *mut dv::DV_BODY_t,
+    ) -> dv::DV_ERROR_code_t;
+}
+
+impl Default for dv::DV_BODY_boolean_o_t {
+    fn default() -> Self {
+        Self {
+            o_t_version: 1,
+            function: dv::boolean_function_e::unite_c.into(),
+        }
+    }
 }
 
 #[derive(Debug, Default)]
 pub struct boolean_o_t {
-    __data: DV_BODY_boolean_o_t,
+    __data: dv::DV_BODY_boolean_o_t,
 }
 
 impl boolean_o_t {
-    pub fn get_function(&self) -> enum_::boolean_function_e {
+    pub fn get_function(&self) -> dv::boolean_function_e {
         self.__data.function.try_into().unwrap()
     }
 
-    pub fn set_function(&mut self, value: enum_::boolean_function_e) {
+    pub fn set_function(&mut self, value: dv::boolean_function_e) {
         self.__data.function = value.into();
     }
 }
 
 impl boolean_o_t {
-    pub(crate) fn get_data(&self) -> &DV_BODY_boolean_o_t {
+    pub(crate) fn get_data(&self) -> &dv::DV_BODY_boolean_o_t {
         &self.__data
     }
 
-    pub(crate) fn get_data_mut(&mut self) -> &mut DV_BODY_boolean_o_t {
+    pub(crate) fn get_data_mut(&mut self) -> &mut dv::DV_BODY_boolean_o_t {
         &mut self.__data
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct BODY_t(ffi_::DV_BODY_t);
-
-impl From<i32> for BODY_t {
+impl From<i32> for dv::BODY_t {
     fn from(value: i32) -> Self {
         Self(value)
     }
 }
 
-impl ENTITY for BODY_t {
+impl dv::ENTITY for dv::BODY_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl TOPOL for BODY_t {}
+impl dv::TOPOL for dv::BODY_t {}
 
-impl BODY_t {
-    pub fn ask_faces(&self) -> common_::DVResult<alias_::FaceArray> {
+impl dv::BODY_t {
+    pub fn ask_faces(&self) -> dv::DVResult<dv::FaceArray> {
         let mut n_faces: i32 = 0;
-        let mut faces: *mut ffi_::DV_FACE_t = std::ptr::null_mut();
+        let mut faces: *mut dv::DV_FACE_t = std::ptr::null_mut();
 
-        common_::wrap_result(
+        dv::common_::wrap_result(
             unsafe { DV_BODY_ask_faces(self.0, &mut n_faces, &mut faces) },
-            || array_::Array::new(faces, n_faces).into(),
+            || dv::array_::Array::new(faces, n_faces).into(),
         )
     }
 
-    pub fn boolean(&self, tools: &[BODY_t], options: &boolean_o_t) -> common_::DVResult<()> {
-        let tool_array: alias_::BodyArray = tools.into();
+    pub fn boolean(
+        &self,
+        tools: &[dv::BODY_t],
+        options: &boolean_o_t,
+    ) -> dv::DVResult<()> {
+        let tool_array: dv::BodyArray = tools.into();
 
-        common_::wrap_result(
+        dv::common_::wrap_result(
             unsafe {
                 DV_BODY_boolean(
                     self.tag(),
@@ -159,11 +146,11 @@ impl BODY_t {
         x: f64,
         y: f64,
         z: f64,
-        basis_set: &axis2_sf_t::AXIS2_sf_t,
-    ) -> common_::DVResult<BODY_t> {
-        let mut body = entity::NULL;
+        basis_set: &dv::AXIS2_sf_t,
+    ) -> dv::DVResult<dv::BODY_t> {
+        let mut body = dv::entity::NULL;
 
-        common_::wrap_result(
+        dv::common_::wrap_result(
             unsafe { DV_BODY_create_solid_block(x, y, z, basis_set, &mut body) },
             || body.into(),
         )

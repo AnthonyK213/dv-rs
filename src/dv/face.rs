@@ -1,37 +1,32 @@
-use super::entity::{self, ENTITY};
-use super::topol::TOPOL;
-use super::{common_, ffi_, loop_};
+use crate::dv::{self, ENTITY, TOPOL};
 
 #[link(name = "differvoid")]
 extern "C" {
     fn DV_FACE_ask_first_loop(
-        face: ffi_::DV_FACE_t,
-        first_loop: *mut ffi_::DV_LOOP_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        face: dv::DV_FACE_t,
+        first_loop: *mut dv::DV_LOOP_t,
+    ) -> dv::DV_ERROR_code_t;
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct FACE_t(ffi_::DV_FACE_t);
-
-impl From<i32> for FACE_t {
+impl From<i32> for dv::FACE_t {
     fn from(value: i32) -> Self {
         Self(value)
     }
 }
 
-impl ENTITY for FACE_t {
+impl ENTITY for dv::FACE_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl TOPOL for FACE_t {}
+impl TOPOL for dv::FACE_t {}
 
-impl FACE_t {
-    pub fn ask_first_loop(&self) -> common_::DVResult<loop_::LOOP_t> {
-        let mut first_loop = entity::NULL;
+impl dv::FACE_t {
+    pub fn ask_first_loop(&self) -> dv::DVResult<dv::LOOP_t> {
+        let mut first_loop = dv::entity::NULL;
 
-        common_::wrap_result(
+        dv::common_::wrap_result(
             unsafe { DV_FACE_ask_first_loop(self.0, &mut first_loop) },
             || first_loop.into(),
         )

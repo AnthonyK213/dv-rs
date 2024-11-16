@@ -1,52 +1,42 @@
-use super::entity::ENTITY;
-use super::geom::GEOM;
-use super::{alias_, common_, ffi_, xy_t, xyz_t};
+use crate::dv::{self, ENTITY, GEOM};
 use std::ffi;
 
 extern "C" {
     fn DV_SURF_eval(
-        surface: ffi_::DV_SURF_t,
-        uv: xy_t::UV_t,
+        surface: dv::DV_SURF_t,
+        uv: dv::UV_t,
         n_u_derivs: ffi::c_int,
         n_v_derivs: ffi::c_int,
-        p: *mut xyz_t::VEC3D_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        p: *mut dv::VEC3D_t,
+    ) -> dv::DV_ERROR_code_t;
 }
 
 pub trait SURF: GEOM {
-    fn eval(
-        &self,
-        uv: xy_t::UV_t,
-        n_u_derivs: i32,
-        n_v_derivs: i32,
-    ) -> common_::DVResult<alias_::XYZArray> {
-        let mut p = alias_::XYZArray::alloc((n_u_derivs + 1) * (n_v_derivs + 1));
+    fn eval(&self, uv: dv::UV_t, n_u_derivs: i32, n_v_derivs: i32) -> dv::DVResult<dv::XYZArray> {
+        let mut p = dv::XYZArray::alloc((n_u_derivs + 1) * (n_v_derivs + 1));
 
-        common_::wrap_result(
+        dv::common_::wrap_result(
             unsafe { DV_SURF_eval(self.tag(), uv, n_u_derivs, n_v_derivs, p.as_mut_ptr()) },
             || p,
         )
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct SURF_t(ffi_::DV_SURF_t);
-
-impl From<i32> for SURF_t {
+impl From<i32> for dv::SURF_t {
     fn from(value: i32) -> Self {
         Self(value)
     }
 }
 
-impl ENTITY for SURF_t {
+impl ENTITY for dv::SURF_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl GEOM for SURF_t {}
+impl GEOM for dv::SURF_t {}
 
-impl SURF for SURF_t {}
+impl SURF for dv::SURF_t {}
 
 #[cfg(test)]
 mod tests {

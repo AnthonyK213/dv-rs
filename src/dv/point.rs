@@ -1,47 +1,39 @@
-use super::entity::{self, ENTITY};
-use super::geom::GEOM;
-use super::{common_, ffi_, point_sf_t};
+use crate::dv::{self, ENTITY, GEOM};
 
 #[link(name = "differvoid")]
 extern "C" {
-    fn DV_POINT_ask(
-        point: ffi_::DV_POINT_t,
-        point_sf: *mut point_sf_t::POINT_sf_t,
-    ) -> ffi_::DV_ERROR_code_t;
+    fn DV_POINT_ask(point: dv::DV_POINT_t, point_sf: *mut dv::POINT_sf_t) -> dv::DV_ERROR_code_t;
 
     fn DV_POINT_create(
-        point_sf: *const point_sf_t::POINT_sf_t,
-        point: *mut ffi_::DV_POINT_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        point_sf: *const dv::POINT_sf_t,
+        point: *mut dv::DV_POINT_t,
+    ) -> dv::DV_ERROR_code_t;
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct POINT_t(ffi_::DV_POINT_t);
-
-impl From<i32> for POINT_t {
+impl From<i32> for dv::POINT_t {
     fn from(value: i32) -> Self {
         Self(value)
     }
 }
 
-impl ENTITY for POINT_t {
+impl ENTITY for dv::POINT_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl GEOM for POINT_t {}
+impl GEOM for dv::POINT_t {}
 
-impl POINT_t {
-    pub fn ask(&self) -> common_::DVResult<point_sf_t::POINT_sf_t> {
-        let mut point_sf = point_sf_t::POINT_sf_t::default();
-        common_::wrap_result(unsafe { DV_POINT_ask(self.0, &mut point_sf) }, || point_sf)
+impl dv::POINT_t {
+    pub fn ask(&self) -> dv::DVResult<dv::POINT_sf_t> {
+        let mut point_sf = dv::POINT_sf_t::default();
+        dv::common_::wrap_result(unsafe { DV_POINT_ask(self.0, &mut point_sf) }, || point_sf)
     }
 
-    pub fn create(point_sf: &point_sf_t::POINT_sf_t) -> common_::DVResult<Self> {
-        let mut point = entity::NULL;
+    pub fn create(point_sf: &dv::POINT_sf_t) -> dv::DVResult<Self> {
+        let mut point = dv::entity::NULL;
 
-        common_::wrap_result(unsafe { DV_POINT_create(point_sf, &mut point) }, || {
+        dv::common_::wrap_result(unsafe { DV_POINT_create(point_sf, &mut point) }, || {
             point.into()
         })
     }

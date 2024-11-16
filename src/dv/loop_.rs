@@ -1,6 +1,4 @@
-use super::entity::{self, ENTITY};
-use super::topol::TOPOL;
-use super::{alias_, array_, common_, ffi_, fin};
+use crate::dv::{self, ENTITY, TOPOL};
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 use std::ffi;
 
@@ -17,37 +15,34 @@ pub enum type_e {
 #[link(name = "differvoid")]
 extern "C" {
     fn DV_LOOP_ask_fins(
-        loop_: ffi_::DV_LOOP_t,
+        loop_: dv::DV_LOOP_t,
         n_fins: *mut ffi::c_int,
-        fins: *mut *mut ffi_::DV_FIN_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        fins: *mut *mut dv::DV_FIN_t,
+    ) -> dv::DV_ERROR_code_t;
 }
 
-#[derive(Debug, Copy, Clone, PartialEq, Eq)]
-pub struct LOOP_t(ffi_::DV_LOOP_t);
-
-impl From<i32> for LOOP_t {
+impl From<i32> for dv::LOOP_t {
     fn from(value: i32) -> Self {
         Self(value)
     }
 }
 
-impl ENTITY for LOOP_t {
+impl ENTITY for dv::LOOP_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl TOPOL for LOOP_t {}
+impl TOPOL for dv::LOOP_t {}
 
-impl LOOP_t {
-    pub fn ask_fins(&self) -> common_::DVResult<alias_::FinArray> {
+impl dv::LOOP_t {
+    pub fn ask_fins(&self) -> dv::DVResult<dv::FinArray> {
         let mut n_fins = 0_i32;
-        let mut fins: *mut ffi_::DV_FIN_t = std::ptr::null_mut();
+        let mut fins: *mut dv::DV_FIN_t = std::ptr::null_mut();
 
-        common_::wrap_result(
+        dv::common_::wrap_result(
             unsafe { DV_LOOP_ask_fins(self.0, &mut n_fins, &mut fins) },
-            || array_::Array::new(fins, n_fins).into(),
+            || dv::array_::Array::new(fins, n_fins).into(),
         )
     }
 }

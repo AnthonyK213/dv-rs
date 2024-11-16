@@ -1,49 +1,44 @@
-use super::entity::{self, ENTITY};
-use super::topol::TOPOL;
-use super::{common_, edge, ffi_, logical_t};
+use crate::dv::{self, ENTITY, TOPOL};
 
 #[link(name = "differvoid")]
 extern "C" {
-    fn DV_FIN_ask_edge(fin: ffi_::DV_FIN_t, edge: *mut ffi_::DV_EDGE_t) -> ffi_::DV_ERROR_code_t;
+    fn DV_FIN_ask_edge(fin: dv::DV_FIN_t, edge: *mut dv::DV_EDGE_t) -> dv::DV_ERROR_code_t;
 
     fn DV_FIN_is_positive(
-        fin: ffi_::DV_FIN_t,
-        is_positive: *mut logical_t::LOGICAL_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        fin: dv::DV_FIN_t,
+        is_positive: *mut dv::LOGICAL_t,
+    ) -> dv::DV_ERROR_code_t;
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct FIN_t(ffi_::DV_FIN_t);
-
-impl From<i32> for FIN_t {
+impl From<i32> for dv::FIN_t {
     fn from(value: i32) -> Self {
         Self(value)
     }
 }
 
-impl ENTITY for FIN_t {
+impl ENTITY for dv::FIN_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl TOPOL for FIN_t {}
+impl TOPOL for dv::FIN_t {}
 
-impl FIN_t {
-    pub fn ask_edge(&self) -> common_::DVResult<edge::EDGE_t> {
-        let mut edge = entity::NULL;
+impl dv::FIN_t {
+    pub fn ask_edge(&self) -> dv::DVResult<dv::EDGE_t> {
+        let mut edge = dv::entity::NULL;
 
-        common_::wrap_result(unsafe { DV_FIN_ask_edge(self.tag(), &mut edge) }, || {
+        dv::common_::wrap_result(unsafe { DV_FIN_ask_edge(self.tag(), &mut edge) }, || {
             edge.into()
         })
     }
 
-    pub fn is_positive(&self) -> common_::DVResult<bool> {
-        let mut is_positive = logical_t::FALSE;
+    pub fn is_positive(&self) -> dv::DVResult<bool> {
+        let mut is_positive = dv::logical_t::FALSE;
 
-        common_::wrap_result(
+        dv::common_::wrap_result(
             unsafe { DV_FIN_is_positive(self.tag(), &mut is_positive) },
-            || logical_t::to_bool(is_positive),
+            || dv::logical_t::to_bool(is_positive),
         )
     }
 }

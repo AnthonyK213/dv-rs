@@ -1,16 +1,14 @@
-use super::{error, ffi_};
-
-pub type DVResult<U> = Result<U, error::code_e>;
+use crate::dv;
 
 #[inline]
-pub(crate) fn wrap_result<U, F>(code: ffi_::DV_ERROR_code_t, f: F) -> DVResult<U>
+pub(crate) fn wrap_result<U, F>(code: dv::DV_ERROR_code_t, f: F) -> dv::DVResult<U>
 where
     F: FnOnce() -> U,
 {
     code.try_into().map_or_else(
-        |e| Err(error::code_e::unset),
+        |e| Err(dv::error::code_e::unset),
         |v| {
-            if v == error::code_e::ok {
+            if v == dv::error::code_e::ok {
                 Ok(f())
             } else {
                 Err(v)

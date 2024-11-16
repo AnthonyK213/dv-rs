@@ -1,5 +1,4 @@
-use super::entity::{self, ENTITY};
-use super::{ffi_, triangle_t, xy_t, xyz_t};
+use crate::dv;
 use std::convert::From;
 use std::default::Default;
 use std::ffi;
@@ -34,7 +33,7 @@ impl<T> Drop for Array<T> {
     #[inline]
     fn drop(&mut self) {
         unsafe {
-            ffi_::DV_MEMORY_free(self.__data as *const ffi::c_void);
+            dv::memory::DV_MEMORY_free(self.__data as *const ffi::c_void);
         }
     }
 }
@@ -77,7 +76,7 @@ impl<T> Array<T> {
         let mut data: *mut ffi::c_void = std::ptr::null_mut();
 
         unsafe {
-            ffi_::DV_MEMORY_alloc(size as i64 * std::mem::size_of::<T>() as i64, &mut data);
+            dv::memory::DV_MEMORY_alloc(size as i64 * std::mem::size_of::<T>() as i64, &mut data);
         }
 
         Self {
@@ -118,7 +117,7 @@ impl<T> Array<T> {
 
 pub struct EntityArray<T>
 where
-    T: ENTITY,
+    T: dv::ENTITY,
 {
     __data: Array<i32>,
     __mark: PhantomData<T>,
@@ -126,7 +125,7 @@ where
 
 impl<T> From<&[T]> for EntityArray<T>
 where
-    T: ENTITY,
+    T: dv::ENTITY,
 {
     fn from(value: &[T]) -> Self {
         let mut array = Array::<i32>::alloc(value.len() as i32);
@@ -146,7 +145,7 @@ where
 
 impl<T> From<&[i32]> for EntityArray<T>
 where
-    T: ENTITY,
+    T: dv::ENTITY,
 {
     fn from(value: &[i32]) -> Self {
         Self {
@@ -158,7 +157,7 @@ where
 
 impl<T> From<Array<i32>> for EntityArray<T>
 where
-    T: ENTITY,
+    T: dv::ENTITY,
 {
     fn from(value: Array<i32>) -> Self {
         Self {
@@ -170,7 +169,7 @@ where
 
 impl<T> Deref for EntityArray<T>
 where
-    T: ENTITY,
+    T: dv::ENTITY,
 {
     type Target = Array<i32>;
 
@@ -182,7 +181,7 @@ where
 
 impl<T> EntityArray<T>
 where
-    T: ENTITY,
+    T: dv::ENTITY,
 {
     pub fn len(&self) -> i32 {
         self.__data.len()

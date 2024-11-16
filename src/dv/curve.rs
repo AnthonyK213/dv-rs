@@ -1,60 +1,44 @@
-use super::entity::ENTITY;
-use super::geom::GEOM;
-use super::{alias_, common_, ffi_, interval_t, logical_t, xyz_t};
+use crate::dv::{self, ENTITY, GEOM};
 use std::ffi;
-
-/* DV_CURVE_make_wire_body_o_t */
-
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct make_wire_body_o_s {
-    o_t_version: ffi::c_int,
-    tolerance: ffi::c_double,
-    allow_disjoint: logical_t::LOGICAL_t,
-    allow_general: logical_t::LOGICAL_t,
-    check: logical_t::LOGICAL_t,
-    want_edges: logical_t::LOGICAL_t,
-    want_indices: logical_t::LOGICAL_t,
-}
 
 #[link(name = "differvoid")]
 extern "C" {
     fn DV_CURVE_ask_interval(
-        curve: ffi_::DV_CURVE_t,
-        interval: *mut interval_t::INTERVAL_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        curve: dv::DV_CURVE_t,
+        interval: *mut dv::INTERVAL_t,
+    ) -> dv::DV_ERROR_code_t;
 
     fn DV_CURVE_eval(
-        curve: ffi_::DV_CURVE_t,
+        curve: dv::DV_CURVE_t,
         t: ffi::c_double,
         n_derivs: ffi::c_int,
-        p: *mut xyz_t::VEC3D_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        p: *mut dv::VEC3D_t,
+    ) -> dv::DV_ERROR_code_t;
 
     fn DV_CURVE_eval_curvature(
-        curve: ffi_::DV_CURVE_t,
+        curve: dv::DV_CURVE_t,
         t: ffi::c_double,
-        tangent: *mut xyz_t::VEC3D_t,
-        principal_normal: *mut xyz_t::VEC3D_t,
-        binormal: *mut xyz_t::VEC3D_t,
+        tangent: *mut dv::VEC3D_t,
+        principal_normal: *mut dv::VEC3D_t,
+        binormal: *mut dv::VEC3D_t,
         curvature: *mut ffi::c_double,
-    ) -> ffi_::DV_ERROR_code_t;
+    ) -> dv::DV_ERROR_code_t;
 }
 
 pub trait CURVE: ENTITY {
-    fn ask_interval(&self) -> common_::DVResult<interval_t::INTERVAL_t> {
-        let mut interval = interval_t::INTERVAL_t { t0: 0., t1: 0. };
+    fn ask_interval(&self) -> dv::DVResult<dv::INTERVAL_t> {
+        let mut interval = dv::INTERVAL_t { t0: 0., t1: 0. };
 
-        common_::wrap_result(
+        dv::common_::wrap_result(
             unsafe { DV_CURVE_ask_interval(self.tag(), &mut interval) },
             || interval,
         )
     }
 
-    fn eval(&self, t: f64, n_derivs: i32) -> common_::DVResult<alias_::XYZArray> {
-        let mut p = alias_::XYZArray::alloc(n_derivs + 1);
+    fn eval(&self, t: f64, n_derivs: i32) -> dv::DVResult<dv::XYZArray> {
+        let mut p = dv::XYZArray::alloc(n_derivs + 1);
 
-        common_::wrap_result(
+        dv::common_::wrap_result(
             unsafe { DV_CURVE_eval(self.tag(), t, n_derivs, p.as_mut_ptr()) },
             || p,
         )
@@ -63,13 +47,13 @@ pub trait CURVE: ENTITY {
     fn eval_curvature(
         &self,
         t: ffi::c_double,
-    ) -> common_::DVResult<(xyz_t::VEC3D_t, xyz_t::VEC3D_t, xyz_t::VEC3D_t, f64)> {
-        let mut tangent = xyz_t::VEC3D_t::default();
-        let mut principal_normal = xyz_t::VEC3D_t::default();
-        let mut binormal = xyz_t::VEC3D_t::default();
+    ) -> dv::DVResult<(dv::VEC3D_t, dv::VEC3D_t, dv::VEC3D_t, f64)> {
+        let mut tangent = dv::VEC3D_t::default();
+        let mut principal_normal = dv::VEC3D_t::default();
+        let mut binormal = dv::VEC3D_t::default();
         let mut curvature = 0_f64;
 
-        common_::wrap_result(
+        dv::common_::wrap_result(
             unsafe {
                 DV_CURVE_eval_curvature(
                     self.tag(),
@@ -85,24 +69,21 @@ pub trait CURVE: ENTITY {
     }
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct CURVE_t(ffi_::DV_CURVE_t);
-
-impl From<i32> for CURVE_t {
+impl From<i32> for dv::CURVE_t {
     fn from(value: i32) -> Self {
         Self(value)
     }
 }
 
-impl ENTITY for CURVE_t {
+impl ENTITY for dv::CURVE_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl GEOM for CURVE_t {}
+impl GEOM for dv::CURVE_t {}
 
-impl CURVE for CURVE_t {}
+impl CURVE for dv::CURVE_t {}
 
 #[cfg(test)]
 mod tests {

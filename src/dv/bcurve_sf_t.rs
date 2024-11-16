@@ -1,53 +1,25 @@
-use super::{alias_, array_, bcurve, enum_, ffi_, logical_t};
-use std::ffi;
+use crate::dv;
 
-/* DV_BCURVE_sf_t */
-
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub(crate) struct DV_BCURVE_sf_t {
-    pub degree: ffi::c_int,
-    pub n_vertices: ffi::c_int,
-    pub vertex_dim: ffi::c_int,
-    pub is_rational: logical_t::LOGICAL_t,
-    pub vertex: *mut ffi::c_double,
-    pub form: ffi_::DV_BCURVE_form_t,
-    pub n_knots: ffi::c_int,
-    pub knot_mult: *mut ffi::c_int,
-    pub knot: *mut ffi::c_double,
-    pub knot_type: ffi_::DV_knot_type_t,
-    pub is_periodic: logical_t::LOGICAL_t,
-    pub is_closed: ffi::c_uchar,
-}
-
-impl Default for DV_BCURVE_sf_t {
+impl Default for dv::DV_BCURVE_sf_t {
     fn default() -> Self {
         Self {
             degree: 0,
             n_vertices: 0,
             vertex_dim: 0,
-            is_rational: logical_t::FALSE,
+            is_rational: dv::logical_t::FALSE,
             vertex: std::ptr::null_mut(),
-            form: bcurve::form_e::unset_c.into(),
+            form: dv::bcurve::form_e::unset_c.into(),
             n_knots: 0,
             knot_mult: std::ptr::null_mut(),
             knot: std::ptr::null_mut(),
-            knot_type: enum_::knot_type_e::unset_c.into(),
-            is_periodic: logical_t::FALSE,
-            is_closed: logical_t::FALSE,
+            knot_type: dv::knot_type_e::unset_c.into(),
+            is_periodic: dv::logical_t::FALSE,
+            is_closed: dv::logical_t::FALSE,
         }
     }
 }
 
-#[derive(Debug, Default)]
-pub struct BCURVE_sf_t {
-    __data: DV_BCURVE_sf_t,
-    __vertex: alias_::DoubleArray,
-    __knot: alias_::DoubleArray,
-    __knot_mult: alias_::Int32Array,
-}
-
-impl BCURVE_sf_t {
+impl dv::BCURVE_sf_t {
     pub fn new() -> Self {
         Self {
             ..Default::default()
@@ -63,35 +35,35 @@ impl BCURVE_sf_t {
     }
 
     pub fn get_is_rational(&self) -> bool {
-        logical_t::to_bool(self.__data.is_rational)
+        dv::logical_t::to_bool(self.__data.is_rational)
     }
 
-    pub fn get_vertex(&self) -> &alias_::DoubleArray {
+    pub fn get_vertex(&self) -> &dv::DoubleArray {
         &self.__vertex
     }
 
-    pub fn get_form(&self) -> bcurve::form_e {
+    pub fn get_form(&self) -> dv::bcurve::form_e {
         self.__data.form.try_into().unwrap()
     }
 
-    pub fn get_knot_mult(&self) -> &alias_::Int32Array {
+    pub fn get_knot_mult(&self) -> &dv::Int32Array {
         &self.__knot_mult
     }
 
-    pub fn get_knot(&self) -> &alias_::DoubleArray {
+    pub fn get_knot(&self) -> &dv::DoubleArray {
         &self.__knot
     }
 
-    pub fn get_knot_type(&self) -> enum_::knot_type_e {
+    pub fn get_knot_type(&self) -> dv::knot_type_e {
         self.__data.knot_type.try_into().unwrap()
     }
 
     pub fn get_is_periodic(&self) -> bool {
-        logical_t::to_bool(self.__data.is_periodic)
+        dv::logical_t::to_bool(self.__data.is_periodic)
     }
 
     pub fn get_is_closed(&self) -> bool {
-        logical_t::to_bool(self.__data.is_closed)
+        dv::logical_t::to_bool(self.__data.is_closed)
     }
 
     pub fn set_degree(&mut self, value: i32) -> &mut Self {
@@ -100,7 +72,7 @@ impl BCURVE_sf_t {
     }
 
     pub fn set_is_rational(&mut self, value: bool) -> &mut Self {
-        self.__data.is_rational = logical_t::from_bool(value);
+        self.__data.is_rational = dv::logical_t::from_bool(value);
         self
     }
 
@@ -112,7 +84,7 @@ impl BCURVE_sf_t {
         self
     }
 
-    pub fn set_form(&mut self, value: bcurve::form_e) -> &mut Self {
+    pub fn set_form(&mut self, value: dv::bcurve::form_e) -> &mut Self {
         self.__data.form = value.into();
         self
     }
@@ -127,26 +99,26 @@ impl BCURVE_sf_t {
     }
 
     pub fn set_is_periodic(&mut self, value: bool) -> &mut Self {
-        self.__data.is_periodic = logical_t::from_bool(value);
+        self.__data.is_periodic = dv::logical_t::from_bool(value);
         self
     }
 }
 
-impl BCURVE_sf_t {
-    pub(crate) fn get_data(&self) -> &DV_BCURVE_sf_t {
+impl dv::BCURVE_sf_t {
+    pub(crate) fn get_data(&self) -> &dv::DV_BCURVE_sf_t {
         &self.__data
     }
 
-    pub(crate) fn get_data_mut(&mut self) -> &mut DV_BCURVE_sf_t {
+    pub(crate) fn get_data_mut(&mut self) -> &mut dv::DV_BCURVE_sf_t {
         &mut self.__data
     }
 
     pub(crate) fn update_cache(&mut self) {
-        self.__vertex = array_::Array::new(
+        self.__vertex = dv::array_::Array::new(
             self.__data.vertex,
             self.__data.n_vertices * self.__data.vertex_dim,
         );
-        self.__knot = array_::Array::new(self.__data.knot, self.__data.n_knots);
-        self.__knot_mult = array_::Array::new(self.__data.knot_mult, self.__data.n_knots);
+        self.__knot = dv::array_::Array::new(self.__data.knot, self.__data.n_knots);
+        self.__knot_mult = dv::array_::Array::new(self.__data.knot_mult, self.__data.n_knots);
     }
 }

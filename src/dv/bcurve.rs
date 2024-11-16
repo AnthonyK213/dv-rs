@@ -1,20 +1,17 @@
-use super::curve::CURVE;
-use super::entity::{self, ENTITY};
-use super::geom::GEOM;
-use super::{bcurve_sf_t, common_, ffi_};
+use crate::dv;
 use num_enum::{IntoPrimitive, TryFromPrimitive};
 
 #[link(name = "differvoid")]
 extern "C" {
     fn DV_BCURVE_ask(
-        bcurve: ffi_::DV_BCURVE_t,
-        bcurve_sf: *mut bcurve_sf_t::DV_BCURVE_sf_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        bcurve: dv::DV_BCURVE_t,
+        bcurve_sf: *mut dv::DV_BCURVE_sf_t,
+    ) -> dv::DV_ERROR_code_t;
 
     fn DV_BCURVE_create(
-        bcurve_sf: *const bcurve_sf_t::DV_BCURVE_sf_t,
-        bcurve: *mut ffi_::DV_BCURVE_t,
-    ) -> ffi_::DV_ERROR_code_t;
+        bcurve_sf: *const dv::DV_BCURVE_sf_t,
+        bcurve: *mut dv::DV_BCURVE_t,
+    ) -> dv::DV_ERROR_code_t;
 }
 
 /* DV_BCURVE_form_e */
@@ -31,30 +28,27 @@ pub enum form_e {
     hyperbolic_c,
 }
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct BCURVE_t(ffi_::DV_BCURVE_t);
-
-impl From<i32> for BCURVE_t {
+impl From<i32> for dv::BCURVE_t {
     fn from(value: i32) -> Self {
         Self(value)
     }
 }
 
-impl ENTITY for BCURVE_t {
+impl dv::ENTITY for dv::BCURVE_t {
     fn tag(&self) -> i32 {
         self.0
     }
 }
 
-impl GEOM for BCURVE_t {}
+impl dv::GEOM for dv::BCURVE_t {}
 
-impl CURVE for BCURVE_t {}
+impl dv::CURVE for dv::BCURVE_t {}
 
-impl BCURVE_t {
-    pub fn ask(&self) -> common_::DVResult<bcurve_sf_t::BCURVE_sf_t> {
-        let mut bcurve_sf = bcurve_sf_t::BCURVE_sf_t::new();
+impl dv::BCURVE_t {
+    pub fn ask(&self) -> dv::DVResult<dv::BCURVE_sf_t> {
+        let mut bcurve_sf = dv::BCURVE_sf_t::new();
 
-        common_::wrap_result(
+        dv::common_::wrap_result(
             unsafe { DV_BCURVE_ask(self.0, bcurve_sf.get_data_mut()) },
             || {
                 bcurve_sf.update_cache();
@@ -63,10 +57,10 @@ impl BCURVE_t {
         )
     }
 
-    pub fn create(bcurve_sf: &bcurve_sf_t::BCURVE_sf_t) -> common_::DVResult<Self> {
-        let mut bcurve = entity::NULL;
+    pub fn create(bcurve_sf: &dv::BCURVE_sf_t) -> dv::DVResult<Self> {
+        let mut bcurve = dv::entity::NULL;
 
-        common_::wrap_result(
+        dv::common_::wrap_result(
             unsafe { DV_BCURVE_create(bcurve_sf.get_data(), &mut bcurve) },
             || bcurve.into(),
         )
